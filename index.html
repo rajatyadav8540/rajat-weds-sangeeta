@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rajat &amp; Sangeeta · Utsav</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +32,9 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { background: var(--peacock-deep); color: var(--ivory); font-family: var(--f-body); font-size: 1.05rem; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+[hidden] { display: none !important; }
+body.locked { overflow: hidden; }
+body { margin: 0; background: var(--peacock-deep); color: var(--ivory); font-family: var(--f-body); font-size: 1.05rem; line-height: 1.65; -webkit-font-smoothing: antialiased; }
 h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
 p { margin: 0; }
 a { color: inherit; }
@@ -94,6 +101,56 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-eve
 .music.on .bars i:nth-child(3) { animation-delay: -.35s; }
 @keyframes mbar { to { transform: scaleY(1); } }
 
+/* ---------- 0. Intro overlay: mandala doors, toran, diya ---------- */
+#intro { position: fixed; inset: 0; z-index: 1000; overflow: hidden; background: #1A0407; perspective: 1800px; transition: opacity .9s ease; }
+#intro.gone { opacity: 0; pointer-events: none; }
+#intro .in-door { position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; background: radial-gradient(120% 80% at var(--hx) 50%, #7A1418 0%, #3B0A10 70%), #3B0A10; transition: transform 1.7s cubic-bezier(.65, .02, .25, 1), filter 1.7s ease; backface-visibility: hidden; }
+#intro .in-door.l { left: 0; --hx: 100%; transform-origin: left center; }
+#intro .in-door.r { right: 0; --hx: 0%; transform-origin: right center; }
+#intro .in-door::before { content: ""; position: absolute; top: 6vmin; bottom: 6vmin; border: 2px solid var(--gold); box-shadow: inset 0 0 0 7px rgba(217, 164, 65, .45); }
+#intro .in-door.l::before { left: 5vmin; right: -2px; border-radius: 50vmin 0 0 0 / 30vmin 0 0 0; border-right: none; }
+#intro .in-door.r::before { right: 5vmin; left: -2px; border-radius: 0 50vmin 0 0 / 0 30vmin 0 0; border-left: none; }
+#intro .in-door.l::after { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: 3px; background: linear-gradient(#B07A1C, var(--gold), #B07A1C); }
+#intro.open .in-door.l { transform: rotateY(-105deg); filter: brightness(.55); }
+#intro.open .in-door.r { transform: rotateY(105deg); filter: brightness(.55); }
+#intro .in-mwrap { position: absolute; top: 50%; width: min(118vmin, 980px); aspect-ratio: 1; transform: translate(-50%, -50%); }
+#intro .in-door.l .in-mwrap { left: 100%; }
+#intro .in-door.r .in-mwrap { left: 0; }
+#intro .in-bloom { width: 100%; height: 100%; animation: inBloom 1.8s .3s cubic-bezier(.2, .8, .2, 1) both; }
+#intro .in-mandala { width: 100%; height: 100%; animation: inSpin 90s linear infinite; opacity: .9; }
+@keyframes inBloom { from { transform: scale(.35); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes inSpin { to { transform: rotate(360deg); } }
+#in-toran { position: absolute; top: 0; left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between; padding: 0 1vw; transform: translateY(-110%); animation: inDrop 1.2s .15s cubic-bezier(.3, 1.4, .5, 1) forwards; transition: transform .9s ease-in; }
+#in-toran::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 16px; background: repeating-linear-gradient(90deg, #9E1B1F 0 14px, var(--gold) 14px 18px); box-shadow: 0 3px 8px rgba(0, 0, 0, .4); }
+#intro.open #in-toran { transform: translateY(-120%) !important; animation: none; }
+@keyframes inDrop { to { transform: translateY(0); } }
+#intro .in-strand { display: flex; flex-direction: column; align-items: center; padding-top: 12px; transform-origin: top center; animation: inSway var(--sw, 3s) ease-in-out var(--sd, 0s) infinite alternate; }
+@keyframes inSway { from { transform: rotate(-2.5deg); } to { transform: rotate(2.5deg); } }
+#intro .in-m { width: clamp(16px, 2.6vw, 26px); aspect-ratio: 1; border-radius: 50%; margin-top: -4px; background: radial-gradient(circle at 35% 30%, #FFD45C, #F29F05 55%, #B85C00); box-shadow: inset -2px -3px 4px rgba(120, 40, 0, .45); }
+#intro .in-m.y { background: radial-gradient(circle at 35% 30%, #FFF1A8, #FFD45C 55%, #D99A00); }
+#intro .in-leaf { width: clamp(10px, 1.4vw, 14px); height: clamp(18px, 2.6vw, 26px); margin-top: -2px; background: linear-gradient(135deg, #7FA24A, #4C6B2F); border-radius: 0 100% 0 100%; transform: rotate(45deg); }
+#intro .in-card { position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; justify-items: center; text-align: center; padding: 24px; color: #FFF3E6; pointer-events: none; transition: opacity .6s ease, transform .6s ease; }
+#intro .in-card::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(92vmin, 620px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(40, 4, 8, .92) 55%, rgba(40, 4, 8, 0)); z-index: -1; }
+#intro.leaving .in-card { opacity: 0; transform: scale(.96); }
+#intro .in-diya { width: clamp(54px, 9vmin, 76px); opacity: 0; animation: inRise .9s 1s ease-out both; }
+#intro .in-flame { transform-origin: 20px 30px; animation: inFlicker .18s ease-in-out infinite alternate; }
+#intro .in-glow { animation: inPulse 1.6s ease-in-out infinite alternate; }
+@keyframes inFlicker { from { transform: scale(1, 1) rotate(-2deg); } to { transform: scale(.92, 1.08) rotate(2deg); } }
+@keyframes inPulse { from { opacity: .35; } to { opacity: .7; } }
+#intro .in-shubh { font: 400 clamp(1.6rem, 5.5vmin, 2.6rem)/1.3 var(--f-deva); color: var(--gold); margin-top: .4em; opacity: 0; animation: inRise .9s 1.5s ease-out both; }
+#intro .in-names { font: 400 clamp(2.6rem, 10vmin, 5.4rem)/1.05 var(--f-display); margin-top: .15em; opacity: 0; animation: inRise 1s 2s ease-out both; text-shadow: 0 2px 20px rgba(0, 0, 0, .4); }
+#intro .in-names span { display: block; font: 400 .5em/1.4 var(--f-script); color: var(--gold); }
+#intro .in-when { font: italic 400 clamp(1rem, 2.6vmin, 1.25rem)/1.5 var(--f-body); color: #F1D9C6; margin-top: .8em; opacity: 0; animation: inRise 1s 2.6s ease-out both; }
+#intro .in-sound { margin-top: 1.2em; font: 700 .72rem/1 var(--f-body); letter-spacing: .2em; text-transform: uppercase; color: rgba(255, 227, 163, .75); opacity: 0; animation: inRise 1s 3s ease-out both; }
+@keyframes inRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+#in-skip { position: absolute; z-index: 6; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: rgba(0, 0, 0, .35); color: #FFF3E6; border: 1px solid rgba(217, 164, 65, .6); font: 600 .95rem var(--f-body); padding: .5em 1.1em; border-radius: 999px; cursor: pointer; }
+#in-skip:hover { background: rgba(0, 0, 0, .55); }
+#in-petals { position: fixed; inset: 0; z-index: 1001; pointer-events: none; overflow: hidden; }
+#in-petals span { position: absolute; top: -6vh; width: var(--s); height: calc(var(--s) * 1.4); background: var(--c); border-radius: 60% 0 60% 0; opacity: .95; animation: inFall var(--d) var(--dl) cubic-bezier(.3, .1, .6, 1) forwards; }
+@keyframes inFall { 0% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(calc(var(--dx) * .6), 55vh) rotate(calc(var(--r) * .5)); } 100% { transform: translate(var(--dx), 112vh) rotate(var(--r)); opacity: .85; } }
+.invite .wrap { transform: scale(1.04); transition: transform 1.8s cubic-bezier(.2, .8, .2, 1); }
+body.revealed .invite .wrap { transform: none; }
+
 /* ---------- 1. Temple entrance ---------- */
 .invite {
   background:
@@ -150,21 +207,6 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-eve
 .open .door.l { transform: rotateY(82deg); }
 .open .door.r { transform: rotateY(-82deg); }
 .open .door::after { opacity: .55; }
-.knock {
-  position: absolute; z-index: 5; left: 50%; top: 66%; translate: -50% -50%;
-  width: 92px; height: 92px; border-radius: 50%; border: 0; cursor: pointer;
-  background: radial-gradient(circle at 35% 30%, #FFF1C4, #D9A441 55%, #8C5A14);
-  box-shadow: 0 0 0 3px #8C5A14, 0 0 0 7px rgba(255, 227, 163, .35), 0 12px 26px rgba(0, 0, 0, .5);
-  color: var(--peacock-deep); font: 700 .7rem/1.1 var(--f-body); letter-spacing: .14em; text-transform: uppercase;
-  display: grid; place-content: center; gap: 4px;
-  animation: knock 2s ease-in-out infinite;
-  transition: opacity .5s, transform .5s;
-}
-.knock b { font: 400 1.5rem/1 var(--f-script); letter-spacing: 0; text-transform: none; color: var(--maroon); }
-@keyframes knock { 50% { box-shadow: 0 0 0 3px #8C5A14, 0 0 0 7px rgba(255, 227, 163, .35), 0 0 40px 14px rgba(255, 210, 120, .6); } }
-.open .knock { opacity: 0; transform: scale(1.4); pointer-events: none; }
-.hint-open { font-size: .82rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 247, 232, .72); transition: opacity .5s; }
-.opened .hint-open { opacity: 0; }
 .bell { transform-box: fill-box; transform-origin: 50% 0; animation: sway 3.2s ease-in-out infinite alternate; }
 .bell.b2 { animation-delay: -1.6s; }
 @keyframes sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
@@ -359,15 +401,41 @@ footer .tag { font-weight: 700; letter-spacing: .14em; color: var(--gold); }
   .feather-corner { width: 60px; height: 200px; }
 }
 @media (max-width: 600px) {
-  .knock { width: 78px; height: 78px; }
   .countdown div { min-width: 64px; }
   .bell-row svg:nth-child(even) { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
+  #intro .in-diya, #intro .in-shubh, #intro .in-names, #intro .in-when, #intro .in-sound, #intro .in-bloom { opacity: 1; }
+  #in-toran { transform: none; }
+  .invite .wrap { transform: none; }
 }
 </style>
+</head>
+<body class="locked">
+
+<!-- 0. Intro -->
+<div id="intro" role="dialog" aria-label="Wedding welcome">
+  <div class="in-door l"><div class="in-mwrap"><div class="in-bloom"><svg class="in-mandala" viewBox="0 0 400 400" aria-hidden="true"></svg></div></div></div>
+  <div class="in-door r"><div class="in-mwrap"><div class="in-bloom"><svg class="in-mandala" viewBox="0 0 400 400" aria-hidden="true"></svg></div></div></div>
+  <div id="in-toran" aria-hidden="true"></div>
+  <div class="in-card">
+    <svg class="in-diya" viewBox="0 0 40 50" aria-hidden="true">
+      <circle class="in-glow" cx="20" cy="22" r="16" fill="#FFB938" opacity=".5" filter="blur(4px)"/>
+      <path class="in-flame" d="M20 6 C25 14 28 20 20 31 C12 20 15 14 20 6Z" fill="#FFD45C"/>
+      <path class="in-flame" d="M20 14 C23 19 24 23 20 30 C16 23 17 19 20 14Z" fill="#FF7A00"/>
+      <path d="M3 31 Q20 50 37 31 Z" fill="#B07A1C"/>
+      <path d="M3 31 Q20 36 37 31" stroke="#D9A441" stroke-width="1.5" fill="none"/>
+    </svg>
+    <p class="in-shubh" lang="hi">शुभ विवाह</p>
+    <p class="in-names">Rajat<span>weds</span>Sangeeta</p>
+    <p class="in-when">8 – 12 December 2026 · Etawah</p>
+    <p class="in-sound">Tap anywhere for music</p>
+  </div>
+  <button id="in-skip" type="button">Skip intro</button>
+</div>
+<div id="in-petals" aria-hidden="true"></div>
 
 <!-- Shared artwork -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -530,10 +598,8 @@ footer .tag { font-weight: 700; letter-spacing: .14em; color: var(--gold); }
         </g>
       </svg>
 
-      <button class="knock" id="knock" type="button" aria-label="Open the temple doors"><b>Open</b>the doors</button>
     </div>
 
-    <p class="hint-open">Tap to open the temple doors · best with sound on</p>
     <p class="date-strip">Tilak 8 Dec <span>·</span> Haldi 9 Dec <span>·</span> Baaraat 11 Dec <span>·</span> Phere 12 Dec</p>
     <p class="countdown-cap">Until the baaraat</p>
     <div class="countdown" role="timer" aria-label="Time left until the baaraat">
@@ -1179,10 +1245,84 @@ footer .tag { font-weight: 700; letter-spacing: .14em; color: var(--gold); }
       for (let i = 0; i < 180; i++) bits.push(newBit(cx, cy, 3 + Math.random() * 9));
     }, 1100);
   }
-  document.getElementById('knock').addEventListener('click', () => openTemple(true));
-  if (reduce) openTemple(false);
-  else if (hasIO) {
-    // if a guest scrolls past without tapping, open the doors quietly
+  /* ---------- 0. Intro: build the mandala doors and toran, then open them ---------- */
+  (function intro() {
+    const box = document.getElementById('intro');
+    const petals = document.getElementById('in-petals');
+    const G = '#D9A441';
+    const ring = (count, d, extra = '') => Array.from({ length: count }, (_, i) => `<path d="${d}" fill="none" stroke="${G}" stroke-width="1.2" transform="rotate(${i * 360 / count} 200 200)" ${extra}/>`).join('');
+    let m = [24, 58, 96, 124, 168, 190, 198].map((r, i) => `<circle cx="200" cy="200" r="${r}" fill="none" stroke="${G}" stroke-width="${i % 2 ? .8 : 1.4}" opacity="${i % 2 ? .6 : 1}"/>`).join('');
+    m += ring(8, 'M200 176 Q212 160 200 142 Q188 160 200 176Z', 'style="fill:rgba(217,164,65,.25)"');
+    m += ring(16, 'M200 142 Q220 122 200 104 Q180 122 200 142Z', 'style="fill:rgba(22,162,181,.22)"');
+    m += ring(16, 'M200 104 Q232 88 200 76 Q168 88 200 104', 'opacity=".7"');
+    m += ring(32, 'M200 76 Q214 54 200 32 Q186 54 200 76Z', 'style="fill:rgba(158,27,31,.55)"');
+    m += ring(64, 'M200 30 Q205 20 200 10 Q195 20 200 30Z', 'opacity=".8"');
+    for (let i = 0; i < 48; i++) { const a = i * TAU / 48; m += `<circle cx="${(200 + 179 * Math.cos(a)).toFixed(1)}" cy="${(200 + 179 * Math.sin(a)).toFixed(1)}" r="2.2" fill="${G}"/>`; }
+    m += `<circle cx="200" cy="200" r="10" fill="${G}"/>`;
+    box.querySelectorAll('.in-mandala').forEach(svg => { svg.innerHTML = m; });
+
+    const toran = document.getElementById('in-toran');
+    const strands = Math.max(9, Math.round(innerWidth / 42));
+    let t = '';
+    for (let i = 0; i < strands; i++) {
+      const edge = Math.abs(i - (strands - 1) / 2) / ((strands - 1) / 2);
+      const len = Math.round(3 + edge * 4 + (i % 2 ? 0 : 1));
+      let beads = '';
+      for (let j = 0; j < len; j++) beads += `<div class="in-m${(i + j) % 3 === 0 ? ' y' : ''}"></div>`;
+      t += `<div class="in-strand" style="--sw:${(2.6 + Math.random() * 1.6).toFixed(2)}s;--sd:-${(Math.random() * 3).toFixed(2)}s">${beads}<div class="in-leaf"></div></div>`;
+    }
+    toran.innerHTML = t;
+
+    // always start at the top, even on reload or a link with a #section
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    toTop();
+    addEventListener('load', toTop);
+
+    const timers = [];
+    const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+    let finished = false, wantsSound = false;
+    function burstPetals() {
+      const colors = ['#F29F05', '#FFD45C', '#E8505B', '#C8102E', '#FF8C1A', '#16A2B5'];
+      const n = innerWidth < 600 ? 45 : 80;
+      let html = '';
+      for (let i = 0; i < n; i++) {
+        html += `<span style="left:${(Math.random() * 100).toFixed(1)}vw;--s:${(8 + Math.random() * 10).toFixed(1)}px;--c:${colors[i % colors.length]};--d:${(3 + Math.random() * 3).toFixed(2)}s;--dl:${(Math.random() * 1.2).toFixed(2)}s;--dx:${((Math.random() - .5) * 40).toFixed(1)}vw;--r:${((Math.random() - .5) * 1080).toFixed(0)}deg"></span>`;
+      }
+      petals.innerHTML = html;
+      setTimeout(() => petals.remove(), 7500);
+    }
+    function reveal() {
+      if (finished) return;
+      finished = true;
+      timers.forEach(clearTimeout);
+      box.classList.add('leaving', 'open', 'gone');
+      toTop();
+      document.body.classList.remove('locked');
+      document.body.classList.add('revealed');
+      setTimeout(() => box.remove(), 1000);
+      setTimeout(() => openTemple(false), reduce ? 0 : 300);
+    }
+    // a tap during the intro is the gesture browsers need before playing sound
+    box.addEventListener('pointerdown', () => {
+      if (wantsSound) return;
+      wantsSound = true;
+      sound.ceremony();
+      sound.start(3.4);
+      const hint = box.querySelector('.in-sound');
+      if (hint) hint.textContent = 'Music on';
+    });
+    if (reduce) at(2200, () => { petals.remove(); reveal(); });
+    else {
+      at(3900, () => box.classList.add('leaving'));
+      at(4300, () => { box.classList.add('open'); burstPetals(); });
+      at(5500, reveal);
+    }
+    document.getElementById('in-skip').addEventListener('click', () => { petals.remove(); reveal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { petals.remove(); reveal(); } });
+  })();
+  if (hasIO && !reduce) {
+    // if a guest scrolls past before the intro ends, open the doors anyway
     new IntersectionObserver(([e]) => { if (!e.isIntersecting && e.boundingClientRect.top < 0) openTemple(false); }).observe(temple);
   }
 
@@ -1482,3 +1622,5 @@ footer .tag { font-weight: 700; letter-spacing: .14em; color: var(--gold); }
 
 })();
 </script>
+</body>
+</html>
