@@ -71,7 +71,8 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-eve
 .play .reveal { animation: rise .9s cubic-bezier(.2, .8, .2, 1) both; animation-delay: var(--d, 0s); }
 @keyframes rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
 .play .title span { animation: pop .8s cubic-bezier(.3, 1.6, .5, 1) both; animation-delay: calc(.15s + var(--i) * .07s); }
-@keyframes pop { 0% { opacity: 0; transform: translateY(40px) scale(.4) rotate(-12deg); } 100% { opacity: 1; transform: none; } }
+@keyframes pop { 0% { opacity: 0; transform: perspective(500px) rotateX(-100deg) translateY(20px); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+.title span { transform-origin: 50% 100%; }
 @keyframes spin { to { rotate: 360deg; } }
 
 /* ---------- Chapter dots ---------- */
@@ -81,53 +82,87 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-eve
 .dots a::after { content: attr(data-label); position: absolute; right: 22px; top: 50%; translate: 0 -50%; white-space: nowrap; font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: rgba(6, 43, 51, .9); color: var(--ivory); padding: 4px 10px; border-radius: 6px; opacity: 0; pointer-events: none; transition: opacity .2s; }
 .dots a:hover::after, .dots a:focus-visible::after { opacity: 1; }
 
-/* ---------- 0. Intro overlay: mandala doors, toran, diya ---------- */
-#intro { position: fixed; inset: 0; z-index: 1000; overflow: hidden; background: #1A0407; perspective: 1800px; transition: opacity .9s ease; }
+/* ---------- 0. Intro: a diya lights the dark, peacock feathers unfurl, the names appear in gold foil ---------- */
+#intro { position: fixed; inset: 0; z-index: 1000; overflow: hidden; background: radial-gradient(120% 90% at 50% 62%, #0E5966 0%, #083640 45%, #03161B 100%); transition: opacity .9s ease; }
 #intro.gone { opacity: 0; pointer-events: none; }
-#intro .in-door { position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; background: radial-gradient(120% 80% at var(--hx) 50%, #7A1418 0%, #3B0A10 70%), #3B0A10; transition: transform 1.7s cubic-bezier(.65, .02, .25, 1), filter 1.7s ease; backface-visibility: hidden; }
-#intro .in-door.l { left: 0; --hx: 100%; transform-origin: left center; }
-#intro .in-door.r { right: 0; --hx: 0%; transform-origin: right center; }
-#intro .in-door::before { content: ""; position: absolute; top: 6vmin; bottom: 6vmin; border: 2px solid var(--gold); box-shadow: inset 0 0 0 7px rgba(217, 164, 65, .45); }
-#intro .in-door.l::before { left: 5vmin; right: -2px; border-radius: 50vmin 0 0 0 / 30vmin 0 0 0; border-right: none; }
-#intro .in-door.r::before { right: 5vmin; left: -2px; border-radius: 0 50vmin 0 0 / 0 30vmin 0 0; border-left: none; }
-#intro .in-door.l::after { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: 3px; background: linear-gradient(#B07A1C, var(--gold), #B07A1C); }
-#intro.open .in-door.l { transform: rotateY(-105deg); filter: brightness(.55); }
-#intro.open .in-door.r { transform: rotateY(105deg); filter: brightness(.55); }
-#intro .in-mwrap { position: absolute; top: 50%; width: min(118vmin, 980px); aspect-ratio: 1; transform: translate(-50%, -50%); }
-#intro .in-door.l .in-mwrap { left: 100%; }
-#intro .in-door.r .in-mwrap { left: 0; }
-#intro .in-bloom { width: 100%; height: 100%; animation: inBloom 1.8s .3s cubic-bezier(.2, .8, .2, 1) both; }
-#intro .in-mandala { width: 100%; height: 100%; animation: inSpin 90s linear infinite; opacity: .9; }
-@keyframes inBloom { from { transform: scale(.35); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-@keyframes inSpin { to { transform: rotate(360deg); } }
-#in-toran { position: absolute; top: 0; left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between; padding: 0 1vw; transform: translateY(-110%); animation: inDrop 1.2s .15s cubic-bezier(.3, 1.4, .5, 1) forwards; transition: transform .9s ease-in; }
+#intro::before { content: ""; position: absolute; inset: 0; z-index: 5; background: #020A0C; pointer-events: none; animation: inDark 1.6s .9s ease-out forwards; }
+@keyframes inDark { to { opacity: 0; } }
+#intro .in-sky { position: absolute; inset: 0; background: radial-gradient(circle at 1px 1px, rgba(255, 240, 200, .55) 1px, transparent 1.6px) 0 0 / 46px 46px, radial-gradient(circle at 1px 1px, rgba(255, 240, 200, .35) 1px, transparent 1.6px) 23px 17px / 61px 61px; animation: inTwinkle 2.6s ease-in-out infinite alternate; }
+@keyframes inTwinkle { from { opacity: .45; } to { opacity: 1; } }
+#intro .in-mw { position: absolute; left: 50%; top: 50%; width: min(140vmin, 1100px); aspect-ratio: 1; translate: -50% -50%; transition: transform 1.3s cubic-bezier(.6, 0, .3, 1), opacity 1s; }
+#intro .in-mandala { width: 100%; height: 100%; animation: inBloom 2.2s .9s cubic-bezier(.2, .8, .2, 1) both, inRot 120s linear infinite; }
+@keyframes inBloom { from { scale: .3; opacity: 0; } to { scale: 1; opacity: .5; } }
+@keyframes inRot { to { rotate: 360deg; } }
+#intro.leaving .in-mw { transform: scale(1.7); opacity: 0; }
+
+#intro .in-fan { position: absolute; left: 50%; bottom: 7vh; width: 0; height: 0; z-index: 1; --L: min(66vh, 94vw, 620px); animation: inFanSway 4s 3s ease-in-out infinite alternate; transition: transform 1.2s cubic-bezier(.6, 0, .3, 1), opacity .9s; }
+@keyframes inFanSway { from { rotate: -1.5deg; } to { rotate: 1.5deg; } }
+#intro .in-fan svg { position: absolute; left: calc(var(--L) * -.15); bottom: 0; width: calc(var(--L) * .3); height: var(--L); transform-origin: 50% 100%; transform: rotate(0deg) scale(.2); opacity: 0; animation: inFeather 1.5s cubic-bezier(.2, .9, .25, 1.1) both; animation-delay: calc(1.2s + var(--k) * .06s); }
+@keyframes inFeather { to { transform: rotate(var(--a)) scale(1); opacity: 1; } }
+#intro.leaving .in-fan { transform: scale(1.45); opacity: 0; }
+
+#intro .in-lantern { position: absolute; bottom: -40px; left: var(--x); z-index: 1; width: 14px; height: 20px; border-radius: 45% 45% 35% 35%; background: radial-gradient(circle at 50% 60%, #FFF1B8, #FF9A3C 60%, #C2410C); box-shadow: 0 0 18px 6px rgba(255, 170, 60, .45); opacity: 0; animation: inLantern var(--d) linear var(--dl) infinite; }
+@keyframes inLantern { 0% { transform: translate(0, 0) scale(var(--sc)); opacity: 0; } 10% { opacity: .95; } 50% { transform: translate(20px, -55vh) scale(var(--sc)); } 90% { opacity: .7; } 100% { transform: translate(-12px, -112vh) scale(calc(var(--sc) * .6)); opacity: 0; } }
+#intro .in-spark { position: absolute; z-index: 2; width: var(--s); height: var(--s); border-radius: 50%; background: #FFE3A3; box-shadow: 0 0 6px 2px rgba(255, 210, 120, .7); pointer-events: none; animation: inSpark var(--d) linear var(--dl) infinite; }
+@keyframes inSpark { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 50% { opacity: .3; } 70% { opacity: 1; } 100% { transform: translateY(-38vh); opacity: 0; } }
+
+#intro .in-garland { position: absolute; top: 0; z-index: 4; width: 17vw; display: flex; justify-content: space-around; transition: transform 1s cubic-bezier(.6, 0, .3, 1); }
+#intro .in-garland.l { left: 0; }
+#intro .in-garland.r { right: 0; }
+#intro.leaving .in-garland.l { transform: translateX(-120%); }
+#intro.leaving .in-garland.r { transform: translateX(120%); }
+#intro .in-garland .in-strand { translate: 0 -110%; animation: inSway var(--sw, 3s) ease-in-out var(--sd, 0s) infinite alternate, inHang 1.4s cubic-bezier(.3, 1.4, .5, 1) var(--dd, 1.2s) forwards; }
+@keyframes inHang { to { translate: 0 0; } }
+#in-toran { position: absolute; top: 0; left: 0; right: 0; z-index: 4; display: flex; justify-content: space-between; padding: 0 1vw; transform: translateY(-110%); animation: inDrop 1.2s 1s cubic-bezier(.3, 1.4, .5, 1) forwards; transition: transform .9s ease-in; }
 #in-toran::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 16px; background: repeating-linear-gradient(90deg, #9E1B1F 0 14px, var(--gold) 14px 18px); box-shadow: 0 3px 8px rgba(0, 0, 0, .4); }
-#intro.open #in-toran { transform: translateY(-120%) !important; animation: none; }
+#intro.leaving #in-toran { transform: translateY(-130%) !important; animation: none; }
 @keyframes inDrop { to { transform: translateY(0); } }
 #intro .in-strand { display: flex; flex-direction: column; align-items: center; padding-top: 12px; transform-origin: top center; animation: inSway var(--sw, 3s) ease-in-out var(--sd, 0s) infinite alternate; }
 @keyframes inSway { from { transform: rotate(-2.5deg); } to { transform: rotate(2.5deg); } }
 #intro .in-m { width: clamp(16px, 2.6vw, 26px); aspect-ratio: 1; border-radius: 50%; margin-top: -4px; background: radial-gradient(circle at 35% 30%, #FFD45C, #F29F05 55%, #B85C00); box-shadow: inset -2px -3px 4px rgba(120, 40, 0, .45); }
 #intro .in-m.y { background: radial-gradient(circle at 35% 30%, #FFF1A8, #FFD45C 55%, #D99A00); }
+#intro .in-m.p { background: radial-gradient(circle at 35% 30%, #FF9EC0, #E8476F 55%, #9E1B4F); }
 #intro .in-leaf { width: clamp(10px, 1.4vw, 14px); height: clamp(18px, 2.6vw, 26px); margin-top: -2px; background: linear-gradient(135deg, #7FA24A, #4C6B2F); border-radius: 0 100% 0 100%; transform: rotate(45deg); }
-#intro .in-card { position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; justify-items: center; text-align: center; padding: 24px; color: #FFF3E6; pointer-events: none; transition: opacity .6s ease, transform .6s ease; }
-#intro .in-card::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(92vmin, 620px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(40, 4, 8, .92) 55%, rgba(40, 4, 8, 0)); z-index: -1; }
-#intro.leaving .in-card { opacity: 0; transform: scale(.96); }
-#intro .in-diya { width: clamp(54px, 9vmin, 76px); opacity: 0; animation: inRise .9s 1s ease-out both; }
+#intro .in-bell { position: absolute; top: 14px; width: clamp(26px, 5vmin, 44px); aspect-ratio: 34 / 70; transform-origin: 50% 0; animation: inSway 1.8s ease-in-out infinite alternate; }
+#intro .in-bell.l { left: 19vw; }
+#intro .in-bell.r { right: 19vw; animation-delay: -.9s; }
+
+#intro .in-card { position: absolute; inset: 0; z-index: 6; display: grid; place-content: center; justify-items: center; text-align: center; padding: 24px; color: #FFF3E6; pointer-events: none; transition: opacity .8s ease, transform 1.1s cubic-bezier(.6, 0, .3, 1), filter .8s; }
+#intro.leaving .in-card { opacity: 0; transform: scale(1.25); filter: blur(6px); }
+#intro .in-medal { position: absolute; left: 50%; top: 50%; z-index: -1; width: min(86vmin, 620px); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(closest-side, rgba(3, 22, 27, .95) 64%, rgba(3, 22, 27, .7) 82%, rgba(3, 22, 27, 0)); box-shadow: inset 0 0 0 2px rgba(217, 164, 65, .65), 0 0 60px rgba(255, 190, 90, .18); opacity: 0; animation: inMedal 1.4s 1.3s ease-out both; }
+#intro .in-medal::before { content: ""; position: absolute; inset: 12px; border-radius: 50%; border: 1px dashed rgba(217, 164, 65, .55); animation: inRot 60s linear infinite; }
+#intro .in-medal::after { content: ""; position: absolute; inset: 26px; border-radius: 50%; border: 2px dotted rgba(217, 164, 65, .35); animation: inRot 80s linear infinite reverse; }
+@keyframes inMedal { from { opacity: 0; scale: .8; } to { opacity: 1; scale: 1; } }
+#intro .in-ganesh { font: 400 clamp(.85rem, 2.4vmin, 1.05rem)/1.4 var(--f-deva); color: rgba(255, 227, 163, .85); margin-bottom: .5em; opacity: 0; animation: inRise .9s 1.7s ease-out both; }
+#intro .in-diya { width: clamp(56px, 10vmin, 84px); opacity: 0; overflow: visible; animation: inIgnite 1.1s .2s ease-out both; }
+@keyframes inIgnite { from { opacity: 0; transform: scale(.6); filter: brightness(2); } to { opacity: 1; transform: none; filter: none; } }
 #intro .in-flame { transform-origin: 20px 30px; animation: inFlicker .18s ease-in-out infinite alternate; }
 #intro .in-glow { animation: inPulse 1.6s ease-in-out infinite alternate; }
 @keyframes inFlicker { from { transform: scale(1, 1) rotate(-2deg); } to { transform: scale(.92, 1.08) rotate(2deg); } }
-@keyframes inPulse { from { opacity: .35; } to { opacity: .7; } }
-#intro .in-shubh { font: 400 clamp(1.6rem, 5.5vmin, 2.6rem)/1.3 var(--f-deva); color: var(--gold); margin-top: .4em; opacity: 0; animation: inRise .9s 1.5s ease-out both; }
-#intro .in-names { font: 400 clamp(2.6rem, 10vmin, 5.4rem)/1.05 var(--f-display); margin-top: .15em; opacity: 0; animation: inRise 1s 2s ease-out both; text-shadow: 0 2px 20px rgba(0, 0, 0, .4); }
-#intro .in-names span { display: block; font: 400 .5em/1.4 var(--f-script); color: var(--gold); }
-#intro .in-when { font: italic 400 clamp(1rem, 2.6vmin, 1.25rem)/1.5 var(--f-body); color: #F1D9C6; margin-top: .8em; opacity: 0; animation: inRise 1s 2.6s ease-out both; }
-#intro .in-sound { margin-top: 1.2em; font: 700 .72rem/1 var(--f-body); letter-spacing: .2em; text-transform: uppercase; color: rgba(255, 227, 163, .75); opacity: 0; animation: inRise 1s 3s ease-out both; }
+@keyframes inPulse { from { opacity: .4; } to { opacity: .8; } }
+#intro .in-shubh { font: 400 clamp(1.6rem, 5.5vmin, 2.6rem)/1.3 var(--f-deva); color: var(--gold); margin-top: .3em; opacity: 0; animation: inRise .9s 2s ease-out both; }
+#intro .in-names { font: 400 clamp(2.8rem, 11vmin, 6rem)/1.02 var(--f-display); margin-top: .1em; }
+#intro .in-names .nm { display: block; font-weight: 400; filter: drop-shadow(0 0 14px rgba(255, 190, 90, .5)); opacity: 0; animation: inSlideL 1.5s 2.2s cubic-bezier(.2, .8, .2, 1) both; }
+#intro .in-names .nm.b { animation-name: inSlideR; }
+@keyframes inSlideL { from { opacity: 0; transform: translateX(-60vw); } to { opacity: 1; transform: none; } }
+@keyframes inSlideR { from { opacity: 0; transform: translateX(60vw); } to { opacity: 1; transform: none; } }
+#intro .in-names .nm i { display: inline-block; font-style: normal; color: transparent; background: linear-gradient(100deg, #B9822A 0%, #F6D27A 30%, #FFF6D6 45%, #F6D27A 60%, #B9822A 100%) 0 0 / 400% 100%; -webkit-background-clip: text; background-clip: text; animation: inFoil 3.2s linear infinite; animation-delay: calc(var(--i) * .12s); }
+@keyframes inFoil { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+#intro .in-orn { width: min(240px, 60vw); height: 20px; margin-top: .5em; animation: inOrn 1s 3.6s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes inOrn { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: none; } }
+#intro .in-when { font: italic 400 clamp(1rem, 2.6vmin, 1.25rem)/1.5 var(--f-body); color: #F1D9C6; margin-top: .6em; opacity: 0; animation: inRise 1s 5s ease-out both; }
+#intro .in-sound { margin-top: 1em; font: 700 .72rem/1 var(--f-body); letter-spacing: .2em; text-transform: uppercase; color: rgba(255, 227, 163, .75); opacity: 0; animation: inRise 1s 5.3s ease-out both; }
 @keyframes inRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-#in-skip { position: absolute; z-index: 6; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: rgba(0, 0, 0, .35); color: #FFF3E6; border: 1px solid rgba(217, 164, 65, .6); font: 600 .95rem var(--f-body); padding: .5em 1.1em; border-radius: 999px; cursor: pointer; }
+
+#intro .in-flash { position: absolute; inset: 0; z-index: 7; pointer-events: none; opacity: 0; background: radial-gradient(circle, rgba(255, 244, 210, .95), rgba(255, 200, 100, .45) 38%, transparent 70%); }
+#intro.open .in-flash { animation: inFlash 1.3s ease-out; }
+@keyframes inFlash { 0% { opacity: 0; } 18% { opacity: 1; } 100% { opacity: 0; } }
+#in-skip { position: absolute; z-index: 8; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: rgba(0, 0, 0, .35); color: #FFF3E6; border: 1px solid rgba(217, 164, 65, .6); font: 600 .95rem var(--f-body); padding: .5em 1.1em; border-radius: 999px; cursor: pointer; }
 #in-skip:hover { background: rgba(0, 0, 0, .55); }
 #in-petals { position: fixed; inset: 0; z-index: 1001; pointer-events: none; overflow: hidden; }
 #in-petals span { position: absolute; top: -6vh; width: var(--s); height: calc(var(--s) * 1.4); background: var(--c); border-radius: 60% 0 60% 0; opacity: .95; animation: inFall var(--d) var(--dl) cubic-bezier(.3, .1, .6, 1) forwards; }
 @keyframes inFall { 0% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(calc(var(--dx) * .6), 55vh) rotate(calc(var(--r) * .5)); } 100% { transform: translate(var(--dx), 112vh) rotate(var(--r)); opacity: .85; } }
+@media (max-width: 600px) { #intro .in-garland { width: 22vw; } #intro .in-bell.l { left: 24vw; } #intro .in-bell.r { right: 24vw; } }
 .invite .wrap { transform: scale(1.04); transition: transform 1.8s cubic-bezier(.2, .8, .2, 1); }
 body.revealed .invite .wrap { transform: none; }
 
@@ -398,6 +433,128 @@ footer { position: relative; overflow: hidden; }
 .lantern { position: absolute; bottom: -40px; left: var(--x); z-index: 1; width: 14px; height: 20px; border-radius: 45% 45% 35% 35%; background: radial-gradient(circle at 50% 60%, #FFF1B8, #FF9A3C 60%, #C2410C); box-shadow: 0 0 18px 6px rgba(255, 170, 60, .45); opacity: 0; animation: lantern var(--d) linear var(--dl) infinite; }
 @keyframes lantern { 0% { transform: translate(0, 0) scale(var(--sc)); opacity: 0; } 10% { opacity: .95; } 50% { transform: translate(18px, -260px) scale(var(--sc)); } 90% { opacity: .8; } 100% { transform: translate(-10px, -540px) scale(calc(var(--sc) * .7)); opacity: 0; } }
 
+/* ---------- 3D ---------- */
+.invite canvas.three { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.art { --dir: 1; }
+.haldi .art, .pheras .art { --dir: -1; }
+.art > * { transition: transform .2s linear; will-change: transform; }
+.armed .art, .armed .scene, .armed .venue { opacity: 0; }
+.play .art { opacity: 1; animation: art3d 1.3s cubic-bezier(.2, .8, .2, 1) .15s both; }
+@keyframes art3d { from { opacity: 0; transform: perspective(1200px) rotateY(calc(var(--dir) * -40deg)) translateX(calc(var(--dir) * 80px)) scale(.85); } to { opacity: 1; transform: none; } }
+.play .scene { opacity: 1; transform-origin: 50% 100%; animation: tipUp 1.4s cubic-bezier(.2, .8, .2, 1) .3s both; }
+@keyframes tipUp { from { opacity: 0; transform: perspective(900px) rotateX(40deg) translateY(60px); } to { opacity: 1; transform: none; } }
+.play .venue { opacity: 1; animation: flipIn 1.1s cubic-bezier(.2, .8, .2, 1) backwards; }
+.play .venue + .venue { animation-delay: .2s; }
+@keyframes flipIn { from { opacity: 0; transform: perspective(900px) rotateY(-90deg); } to { opacity: 1; transform: perspective(900px) rotateY(0deg); } }
+footer .wrap { perspective: 700px; }
+
+/* ---------- More ambience ---------- */
+.title { font-kerning: none; }
+.title[aria-label] { position: relative; }
+.title[aria-label]::after {
+  content: attr(aria-label); position: absolute; inset: 0; pointer-events: none;
+  color: transparent; font-kerning: none; text-shadow: none;
+  background: linear-gradient(110deg, transparent 38%, rgba(255, 255, 255, .8) 50%, transparent 62%) 150% 0 / 250% 100% no-repeat;
+  -webkit-background-clip: text; background-clip: text;
+  animation: shine 6s ease-in-out 2.2s infinite;
+}
+@keyframes shine { 0% { background-position: 150% 0; } 35%, 100% { background-position: -150% 0; } }
+
+.tilak::after {
+  content: ""; position: absolute; left: 50%; top: 0; width: 170%; aspect-ratio: 1; translate: -50% 0; z-index: 0; pointer-events: none;
+  transform-origin: 50% 0;
+  background: repeating-conic-gradient(from 90deg at 50% 0%, rgba(255, 214, 140, .11) 0 3deg, transparent 3deg 11deg);
+  -webkit-mask: radial-gradient(circle at 50% 0%, #000 0, transparent 55%); mask: radial-gradient(circle at 50% 0%, #000 0, transparent 55%);
+  mix-blend-mode: screen;
+  animation: raySway 11s ease-in-out infinite alternate;
+}
+@keyframes raySway { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+
+.shoot { position: absolute; z-index: 1; top: var(--t); left: var(--l); width: 150px; height: 2px; border-radius: 2px; pointer-events: none; background: linear-gradient(90deg, rgba(255, 255, 255, 0), #FFFFFF); box-shadow: 0 0 8px rgba(255, 255, 255, .7); opacity: 0; animation: shoot 8s ease-in var(--d) infinite; }
+@keyframes shoot { 0% { opacity: 0; transform: rotate(18deg) translateX(0); } 2% { opacity: 1; } 11% { opacity: 0; transform: rotate(18deg) translateX(460px); } 100% { opacity: 0; transform: rotate(18deg) translateX(460px); } }
+
+.diya-row { position: absolute; left: 0; right: 0; bottom: 8px; z-index: 1; display: flex; justify-content: space-around; padding-inline: 6%; pointer-events: none; }
+.diya-row svg { width: 44px; height: 48px; overflow: visible; }
+.armed .diya-row svg { opacity: 0; }
+.play .diya-row svg { opacity: 1; animation: rise .9s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(.4s + var(--i) * .12s); }
+
+.dancer { position: relative; width: 300px; max-width: 100%; height: 214px; margin: 0 auto 4px; }
+.dancer-tail { position: absolute; left: 50%; bottom: 34px; width: 0; height: 0; animation: shiver 4.5s ease-in-out 1.8s infinite; }
+.dancer-tail svg { position: absolute; left: -18px; bottom: 0; width: 36px; height: 162px; transform-origin: 50% 100%; transform: rotate(var(--a)); transition: transform 1.4s cubic-bezier(.2, .9, .25, 1.15); transition-delay: calc(var(--i) * .07s); }
+.armed .dancer-tail svg { transform: rotate(0deg) scale(.3); }
+.play .dancer-tail svg { transform: rotate(var(--a)); }
+@keyframes shiver { 0%, 58%, 100% { transform: none; } 61% { transform: rotate(1.6deg) scale(1.02); } 64% { transform: rotate(-1.6deg) scale(1.02); } 67% { transform: rotate(1.6deg) scale(1.02); } 70% { transform: rotate(-1.6deg) scale(1.02); } 73% { transform: rotate(1deg); } 76% { transform: none; } }
+.dancer-body { position: absolute; width: 90px; height: 135px; left: calc(50% - 37.5px); bottom: -6px; animation: bob 1.6s ease-in-out infinite alternate; }
+
+.rangoli { position: absolute; z-index: 0; width: min(340px, 62vw); aspect-ratio: 1; opacity: .3; pointer-events: none; animation: spin 160s linear infinite; }
+.rangoli.l { left: -90px; top: -60px; }
+.rangoli.r { right: -90px; bottom: -80px; animation-direction: reverse; }
+.rg-ink { stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 0; fill-opacity: .85; }
+.armed .rg-ink { stroke-dashoffset: 1; fill-opacity: 0; }
+.play .rg-ink { animation: rgDraw 1.6s ease-out both; animation-delay: var(--d); }
+@keyframes rgDraw { 0% { stroke-dashoffset: 1; fill-opacity: 0; } 60% { stroke-dashoffset: 0; fill-opacity: 0; } 100% { stroke-dashoffset: 0; fill-opacity: .85; } }
+.rg-dot { transform-box: fill-box; transform-origin: center; }
+.armed .rg-dot { transform: scale(0); }
+.play .rg-dot { animation: splat .4s cubic-bezier(.3, 1.8, .5, 1) both; animation-delay: var(--d); }
+
+/* ---------- After the intro: scroll cue ---------- */
+.scroll-cue { position: fixed; z-index: 29; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; display: grid; justify-items: center; gap: 6px; padding: 10px 20px 8px; border-radius: 999px; border: 1px solid rgba(217, 164, 65, .6); background: rgba(6, 43, 51, .88); color: var(--gold-soft); font: 700 .78rem/1.2 var(--f-body); letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; cursor: pointer; backdrop-filter: blur(6px); box-shadow: 0 10px 30px rgba(0, 0, 0, .35), 0 0 24px rgba(255, 200, 100, .25); animation: cueIn .8s 1.2s backwards; transition: opacity .5s, transform .5s; }
+.scroll-cue i { width: 14px; height: 14px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; rotate: 45deg; animation: cueBounce 1.2s ease-in-out infinite; }
+@keyframes cueIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes cueBounce { 0%, 100% { translate: 0 -3px; } 50% { translate: 0 5px; } }
+.scroll-cue.gone { opacity: 0; transform: translateY(20px); pointer-events: none; }
+
+/* ---------- Blend each ceremony's colours into the next ---------- */
+.chapter.banded::before { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='22'%3E%3Cpath d='M0 22V13Q0 3 12 3Q24 3 24 13V22M24 22V13Q24 3 36 3Q48 3 48 13V22' fill='none' stroke='%23D9A441' stroke-width='1.6'/%3E%3Ccircle cx='12' cy='13' r='2.2' fill='%23D9A441'/%3E%3Ccircle cx='36' cy='13' r='2.2' fill='%23D9A441'/%3E%3C/svg%3E") 0 0 / 48px 22px repeat-x; opacity: .7; }
+.tilak { background:
+  linear-gradient(180deg, #062B33 0, #3A1020 70px, rgba(110, 10, 20, .5) 130px, rgba(110, 10, 20, 0) 200px),
+  linear-gradient(0deg, #4E0707 0, rgba(78, 7, 7, 0) 160px),
+  radial-gradient(85% 75% at 70% 45%, #D32F2F, #9E1010 50%, #4E0707); }
+.haldi { background:
+  linear-gradient(180deg, #4E0707 0, #9A3A06 80px, rgba(230, 140, 0, .5) 150px, rgba(240, 165, 0, 0) 220px),
+  linear-gradient(0deg, #F0A500 0, rgba(240, 165, 0, 0) 160px),
+  radial-gradient(90% 80% at 30% 40%, #FFE070, #FFC21A 55%, #F0A500); }
+.baraat { background:
+  linear-gradient(180deg, #F0A500 0, #E8743B 80px, rgba(156, 47, 122, .6) 160px, rgba(45, 27, 107, 0) 250px),
+  linear-gradient(180deg, #0E1E4A 0%, #2D1B6B 30%, #9C2F7A 60%, #F08A5D 82%, #FFC27A 100%); }
+.pheras { background:
+  linear-gradient(180deg, #FFC27A 0, #E8743B 70px, rgba(160, 30, 40, .6) 150px, rgba(122, 18, 32, 0) 230px),
+  linear-gradient(0deg, #22030A 0, rgba(34, 3, 10, 0) 160px),
+  radial-gradient(70% 70% at 30% 55%, #7A1220, #4A0710 50%, #22030A); }
+.final { background:
+  linear-gradient(180deg, #22030A 0, #7A3B2E 80px, rgba(232, 180, 140, .5) 160px, rgba(255, 247, 232, 0) 240px),
+  radial-gradient(circle at 50% 0, transparent 13px, rgba(11, 79, 92, .07) 14px, transparent 15.5px) 0 0 / 30px 18px,
+  var(--ivory); }
+
+/* ---------- Namaste: folded hands to welcome and to invite ---------- */
+.namaste { display: block; overflow: visible; }
+.namaste .nl, .namaste .nr { transform-box: view-box; }
+.namaste .nl { transform-origin: 80px 225px; }
+.namaste .nr { transform-origin: 120px 225px; }
+@keyframes nlIn { from { transform: rotate(-34deg) translateX(-12px); opacity: 0; } 25% { opacity: 1; } to { transform: none; opacity: 1; } }
+@keyframes nrIn { from { transform: rotate(34deg) translateX(12px); opacity: 0; } 25% { opacity: 1; } to { transform: none; opacity: 1; } }
+.namaste .nglow { transform-box: fill-box; transform-origin: center; animation: nGlow 2.4s ease-in-out infinite alternate; }
+@keyframes nGlow { from { opacity: .45; transform: scale(.9); } to { opacity: .9; transform: scale(1.05); } }
+.namaste .nstar { transform-box: fill-box; transform-origin: center; animation: nStar 1.8s ease-in-out infinite alternate; }
+@keyframes nStar { from { opacity: .2; transform: scale(.5); } to { opacity: 1; transform: scale(1); } }
+#intro .in-names .wd { display: block; font: 400 .42em/1.3 var(--f-script); color: var(--gold-soft); opacity: 0; animation: inRise .9s 3.2s ease-out both; }
+#intro .in-namaste { width: min(100px, 24vw); height: auto; margin: .5em auto .1em; }
+#intro .in-namaste .nl { animation: nlIn 1.3s 3.6s cubic-bezier(.3, .9, .3, 1.1) both; }
+#intro .in-namaste .nr { animation: nrIn 1.3s 3.6s cubic-bezier(.3, .9, .3, 1.1) both; }
+#intro .in-namaste .nglow, #intro .in-namaste .nstar { opacity: 0; animation-delay: 4.6s; animation-fill-mode: none; }
+#intro .in-welcome { font: 400 clamp(1.05rem, 3.2vmin, 1.35rem)/1.35 var(--f-deva); color: var(--gold-soft); margin-top: .2em; opacity: 0; animation: inRise .9s 4.6s ease-out both; }
+#intro .in-welcome span { display: block; font: italic 400 .78em/1.4 var(--f-body); color: #F1D9C6; }
+.foot-namaste { width: 116px; margin-bottom: 4px; }
+.armed .foot-namaste .nl, .armed .foot-namaste .nr, .armed .foot-namaste .nglow { opacity: 0; }
+.play .foot-namaste .nl { opacity: 1; animation: nlIn 1.4s .3s cubic-bezier(.3, .9, .3, 1.1) both; }
+.play .foot-namaste .nr { opacity: 1; animation: nrIn 1.4s .3s cubic-bezier(.3, .9, .3, 1.1) both; }
+.play .foot-namaste .nglow { opacity: 1; animation-delay: 1.4s; animation-fill-mode: backwards; }
+.union-cap span { display: block; }
+.union-cap span[lang] { font-family: var(--f-deva); font-size: 1.25rem; }
+.union-cap { font-family: var(--f-display); font-size: 1.05rem; text-align: center; color: var(--gold-soft); letter-spacing: .04em; margin-bottom: 8px; }
+.armed .union-cap { opacity: 0; }
+.play .union-cap { animation: rise 1s 2.6s cubic-bezier(.2, .8, .2, 1) both; }
+
 @media (max-width: 860px) {
   .two { grid-template-columns: 1fr; gap: 36px; padding-block: 100px 84px; }
   .haldi .art { order: 0; }
@@ -408,12 +565,18 @@ footer { position: relative; overflow: hidden; }
 @media (max-width: 600px) {
   .countdown div { min-width: 64px; }
   .bell-row svg:nth-child(even) { display: none; }
+  .diya-row svg:nth-child(n+6) { display: none; }
+  .dancer { transform: scale(.85); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  #intro .in-diya, #intro .in-shubh, #intro .in-names, #intro .in-when, #intro .in-sound, #intro .in-bloom { opacity: 1; }
-  #in-toran { transform: none; }
+  #intro::before { display: none; }
+  #intro .in-diya, #intro .in-shubh, #intro .in-when, #intro .in-sound, #intro .in-ganesh, #intro .in-orn, #intro .in-medal, #intro .in-names .nm { opacity: 1; }
+  #intro .in-names .wd, #intro .in-welcome, #intro .in-namaste .nglow, #intro .in-namaste .nstar { opacity: 1; }
+  #intro .in-mandala { opacity: .5; }
+  #intro .in-fan svg { opacity: 1; transform: rotate(var(--a)); }
+  #in-toran, #intro .in-garland .in-strand { transform: none; translate: 0 0; }
   .invite .wrap { transform: none; }
 }
 </style>
@@ -422,22 +585,33 @@ footer { position: relative; overflow: hidden; }
 
 <!-- 0. Intro -->
 <div id="intro" role="dialog" aria-label="Wedding welcome">
-  <div class="in-door l"><div class="in-mwrap"><div class="in-bloom"><svg class="in-mandala" viewBox="0 0 400 400" aria-hidden="true"></svg></div></div></div>
-  <div class="in-door r"><div class="in-mwrap"><div class="in-bloom"><svg class="in-mandala" viewBox="0 0 400 400" aria-hidden="true"></svg></div></div></div>
+  <div class="in-sky" aria-hidden="true"></div>
+  <div class="in-mw" aria-hidden="true"><svg class="in-mandala" viewBox="0 0 400 400"></svg></div>
+  <div id="in-lanterns" aria-hidden="true"></div>
+  <div class="in-fan" id="in-fan" aria-hidden="true"></div>
+  <div id="in-sparks" aria-hidden="true"></div>
+  <div class="in-garland l" id="in-gl" aria-hidden="true"></div>
+  <div class="in-garland r" id="in-gr" aria-hidden="true"></div>
   <div id="in-toran" aria-hidden="true"></div>
   <div class="in-card">
+    <div class="in-medal" aria-hidden="true"></div>
+    <p class="in-ganesh" lang="hi">॥ श्री गणेशाय नमः ॥</p>
     <svg class="in-diya" viewBox="0 0 40 50" aria-hidden="true">
-      <circle class="in-glow" cx="20" cy="22" r="16" fill="#FFB938" opacity=".5" filter="blur(4px)"/>
+      <circle class="in-glow" cx="20" cy="22" r="18" fill="#FFB938" opacity=".55" filter="blur(5px)"/>
       <path class="in-flame" d="M20 6 C25 14 28 20 20 31 C12 20 15 14 20 6Z" fill="#FFD45C"/>
       <path class="in-flame" d="M20 14 C23 19 24 23 20 30 C16 23 17 19 20 14Z" fill="#FF7A00"/>
       <path d="M3 31 Q20 50 37 31 Z" fill="#B07A1C"/>
       <path d="M3 31 Q20 36 37 31" stroke="#D9A441" stroke-width="1.5" fill="none"/>
     </svg>
     <p class="in-shubh" lang="hi">शुभ विवाह</p>
-    <p class="in-names">Rajat<span>weds</span>Sangeeta</p>
+    <p class="in-names" aria-label="Rajat weds Sangeeta"><b class="nm a">Rajat</b><span class="wd">weds</span><b class="nm b">Sangeeta</b></p>
+    <svg class="in-orn" viewBox="0 0 200 20" aria-hidden="true"><path d="M0 10H82M118 10H200" stroke="#D9A441" stroke-width="1.5"/><path d="M100 2 L108 10 L100 18 L92 10Z" fill="#D9A441"/><circle cx="87" cy="10" r="2.6" fill="#D9A441"/><circle cx="113" cy="10" r="2.6" fill="#D9A441"/></svg>
+    <span class="hands-slot" data-cls="in-namaste"></span>
+    <p class="in-welcome" lang="hi">आपका हार्दिक स्वागत है<span lang="en">You are warmly welcomed</span></p>
     <p class="in-when">8 – 12 December 2026 · Etawah</p>
     <p class="in-sound">Tap anywhere to start the music</p>
   </div>
+  <div class="in-flash" aria-hidden="true"></div>
   <button id="in-skip" type="button">Skip intro</button>
 </div>
 <div id="in-petals" aria-hidden="true"></div>
@@ -488,6 +662,16 @@ footer { position: relative; overflow: hidden; }
       <circle cx="60" cy="22" r="2.2" fill="#16A2B5"/><circle cx="65" cy="19" r="2.2" fill="#16A2B5"/><circle cx="71" cy="21" r="2.2" fill="#16A2B5"/>
     </symbol>
 
+    <symbol id="pbody-s" viewBox="0 0 120 180">
+      <path d="M52,128 L50,147 M58,127 L60,147" stroke="#D9A441" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M50,128 C34,116 36,90 48,80 C54,74 56,62 55,50 C54,40 62,33 70,37 C76,40 74,48 70,51 C65,57 66,72 72,86 C80,104 74,126 50,128Z" fill="url(#pbody)"/>
+      <path d="M50,124 C42,112 44,98 54,90 C64,98 66,112 58,124Z" fill="#16A2B5" opacity=".85"/>
+      <path d="M48,116 Q54,112 60,116 M47,108 Q54,104 61,108 M49,100 Q55,96 60,100" stroke="#0C6E7A" stroke-width="1.2" fill="none"/>
+      <path d="M74,40 L85,43 L74,46Z" fill="#E3B23C"/>
+      <circle cx="69" cy="41" r="1.9" fill="#FFFFFF"/><circle cx="69.4" cy="41.2" r=".9" fill="#0A1240"/>
+      <path d="M66,36 L60,23 M67,35 L65,20 M68,35 L71,22" stroke="#16A2B5" stroke-width="1.2"/>
+      <circle cx="60" cy="22" r="2.2" fill="#16A2B5"/><circle cx="65" cy="19" r="2.2" fill="#16A2B5"/><circle cx="71" cy="21" r="2.2" fill="#16A2B5"/>
+    </symbol>
     <symbol id="mg" viewBox="-20 -20 40 40">
       <circle r="15" fill="#F7900B" stroke="#E06A00" stroke-width="5" stroke-dasharray="2.2 1.6"/>
       <circle r="10" fill="#FFAE1F" stroke="#F58A00" stroke-width="4" stroke-dasharray="2 1.4"/>
@@ -721,6 +905,9 @@ footer { position: relative; overflow: hidden; }
   <section class="chapter banded baraat" id="baraat" aria-labelledby="baraat-t">
     <canvas class="fx" id="fireworks" aria-hidden="true"></canvas>
     <div class="lights" id="lights" aria-hidden="true"></div>
+    <i class="shoot" style="--t:14%;--l:8%;--d:1s" aria-hidden="true"></i>
+    <i class="shoot" style="--t:22%;--l:42%;--d:3.7s" aria-hidden="true"></i>
+    <i class="shoot" style="--t:9%;--l:64%;--d:6.2s" aria-hidden="true"></i>
     <div class="wrap head">
       <p class="when reveal">Day 3 · Friday 11 December 2026</p>
       <h2 class="title" id="baraat-t" data-split>Baaraat</h2>
@@ -743,6 +930,7 @@ footer { position: relative; overflow: hidden; }
   <!-- 5. Phere & Vidaai -->
   <section class="chapter banded pheras" id="pheras" aria-labelledby="pheras-t">
     <svg class="feather-corner l" viewBox="0 0 60 200" aria-hidden="true"><use href="#feather"/></svg>
+    <div class="diya-row" id="diya-row" aria-hidden="true"></div>
     <div class="wrap two">
       <div class="art">
         <div class="agni-wrap">
@@ -776,10 +964,13 @@ footer { position: relative; overflow: hidden; }
   </section>
 
   <!-- 6. Venues -->
-  <section class="final" id="venues">
+  <section class="chapter final" id="venues">
+    <svg class="rangoli l" viewBox="-2 -2 204 204" aria-hidden="true"></svg>
+    <svg class="rangoli r" viewBox="-2 -2 204 204" aria-hidden="true"></svg>
     <div class="wrap">
       <div>
         <div class="center">
+          <div class="dancer" aria-hidden="true"><div class="dancer-tail" id="dancer-tail"></div><svg class="dancer-body" viewBox="0 0 120 180"><use href="#pbody-s"/></svg></div>
           <p class="eyebrow">Where we'll be</p>
           <h2>Two venues, <span class="script">one family</span></h2>
         </div>
@@ -807,9 +998,10 @@ footer { position: relative; overflow: hidden; }
   </section>
 </main>
 
-<footer>
+<footer class="chapter">
   <div class="wrap">
-    <svg class="feather" viewBox="0 0 60 200" aria-hidden="true"><use href="#feather"/></svg>
+    <span class="hands-slot" data-cls="foot-namaste"></span>
+    <p class="union-cap"><span lang="hi">सादर निमंत्रण</span><span>We humbly request your presence</span></p>
     <p class="hi" lang="hi">आपकी उपस्थिति प्रार्थनीय है</p>
     <p>Your presence is the only gift we ask for.</p>
     <p class="script">Rajat &amp; Sangeeta</p>
@@ -831,6 +1023,28 @@ footer { position: relative; overflow: hidden; }
     };
   }
   const svgHTML = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+
+  /* ---------- Namaste: two palms folded together, drawn as one hand and its mirror ---------- */
+  function namasteSVG(cls) {
+    const skin = '#D9A07A', meh = '#8A3A12';
+    const bangles = Array.from({ length: 4 }, (_, i) => `<rect x="70" y="${199 + i * 5}" width="31" height="4" rx="2" fill="${i % 2 ? '#FFF3E0' : '#C8102E'}"/>`).join('');
+    const hand = `
+      <path d="M76,224 L74,196 C66,168 64,146 68,128 C72,108 80,90 84,70 L90,36 C92,26 98,26 100,38 L100,224 Z" fill="${skin}"/>
+      <path d="M92,60 C95,62 98,62 100,61 M88,82 C93,84 97,84 100,83 M84,104 C90,106 96,106 100,105" stroke="rgba(110,50,20,.35)" stroke-width="1.4" fill="none"/>
+      <path d="M100,122 C90,120 84,130 86,144 L95,164 L100,164 Z" fill="#C98E68"/>
+      <g fill="${meh}"><circle cx="82" cy="148" r="2"/><circle cx="79" cy="160" r="1.6"/><circle cx="82" cy="172" r="2"/></g>
+      <path d="M78,186 Q86,180 94,186" stroke="${meh}" stroke-width="1.4" fill="none"/>
+      <rect x="70" y="194" width="31" height="3.5" rx="1.5" fill="#D9A441"/>${bangles}
+      <path d="M64,218 L100,218 L100,252 L56,252 Z" fill="#8E0D24"/><path d="M64,218 H100" stroke="#D9A441" stroke-width="3"/>`;
+    const star = (x, y, r, d) => `<path class="nstar" style="animation-delay:${d}s" d="M${x},${y - r} Q${x},${y} ${x + r},${y} Q${x},${y} ${x},${y + r} Q${x},${y} ${x - r},${y} Q${x},${y} ${x},${y - r}Z" fill="#FFE3A3"/>`;
+    return `<svg class="namaste ${cls}" viewBox="0 0 200 252" aria-hidden="true">
+      <circle class="nglow" cx="100" cy="110" r="74" fill="url(#glow)"/>
+      <g class="nl">${hand}</g>
+      <g class="nr"><g transform="translate(200 0) scale(-1 1)">${hand}</g></g>
+      ${star(46, 52, 7, 0)}${star(158, 40, 6, .6)}${star(168, 104, 5, 1.1)}${star(34, 112, 5, .3)}
+    </svg>`;
+  }
+  document.querySelectorAll('.hands-slot').forEach(el => { el.outerHTML = namasteSVG(el.dataset.cls); });
 
   /* ---------- Countdown to the baaraat (IST) ---------- */
   const target = new Date('2026-12-11T00:00:00+05:30').getTime();
@@ -971,6 +1185,32 @@ footer { position: relative; overflow: hidden; }
   })();
   sound.start();
 
+  /* ---------- Ambience: dancing peacock, rangoli, diyas ---------- */
+  (function ambience() {
+    const n = 15;
+    svgHTML('dancer-tail', Array.from({ length: n }, (_, i) =>
+      `<svg viewBox="0 0 60 200" style="--a:${(-78 + i * (156 / (n - 1))).toFixed(1)}deg;--i:${Math.abs(i - (n - 1) / 2)}"><use href="#feather"/></svg>`).join(''));
+
+    const cols = ['#C2185B', '#F29F05', '#16A2B5', '#138A6B', '#FFC21A'];
+    const pt = (r, a) => `${(100 + r * Math.cos(a)).toFixed(1)},${(100 + r * Math.sin(a)).toFixed(1)}`;
+    const petal = (a, r0, r1, w) => { const rm = (r0 + r1) / 2; return `M${pt(r0, a)}Q${pt(rm, a - w)} ${pt(r1, a)}Q${pt(rm, a + w)} ${pt(r0, a)}Z`; };
+    let rg = '<circle class="rg-ink" pathLength="1" cx="100" cy="100" r="10" fill="#FFC21A" stroke="#F29F05" style="--d:0s"/>', d = .2;
+    const ring = (count, r0, r1, w, col, off = 0) => {
+      for (let i = 0; i < count; i++) rg += `<path class="rg-ink" pathLength="1" d="${petal(off + i / count * TAU, r0, r1, w)}" fill="${col}" stroke="${col}" style="--d:${(d + i * .03).toFixed(2)}s"/>`;
+      d += .5;
+    };
+    ring(8, 12, 40, .35, cols[0]);
+    ring(8, 18, 38, .22, cols[1], TAU / 16);
+    ring(16, 44, 70, .16, cols[2]);
+    ring(16, 50, 66, .08, cols[4]);
+    ring(24, 74, 96, .1, cols[3], TAU / 48);
+    for (let i = 0; i < 32; i++) { const a = i / 32 * TAU; rg += `<circle class="rg-dot" cx="${(100 + 99 * Math.cos(a)).toFixed(1)}" cy="${(100 + 99 * Math.sin(a)).toFixed(1)}" r="2.2" fill="${cols[i % 5]}" style="--d:${(d + i * .02).toFixed(2)}s"/>`; }
+    document.querySelectorAll('.rangoli').forEach(svg => { svg.innerHTML = rg; });
+
+    svgHTML('diya-row', Array.from({ length: 9 }, (_, i) =>
+      `<svg viewBox="-24 -40 48 52" style="--i:${i}"><circle class="glowc" cy="-18" r="22" fill="url(#glow)" style="animation-delay:-${(i * .3).toFixed(1)}s"/><path d="M-18,0 Q0,13 18,0 Q11,-7 0,-7 Q-11,-7 -18,0Z" fill="#C1662E"/><path d="M-18,0 Q0,13 18,0" stroke="#E8B04B" stroke-width="1.5" fill="none"/><path class="flame" d="M0,-8 Q-6,-17 0,-32 Q6,-17 0,-8Z" fill="url(#flameG)" style="animation-delay:-${(i * .07).toFixed(2)}s"/></svg>`).join(''));
+  })();
+
   /* ---------- Split chapter titles into letters ---------- */
   document.querySelectorAll('[data-split]').forEach(el => {
     const word = el.textContent;
@@ -1071,6 +1311,78 @@ footer { position: relative; overflow: hidden; }
       for (let i = 0; i < 180; i++) bits.push(newBit(cx, cy, 3 + Math.random() * 9));
     }, 1100);
   }
+  /* ---------- After the intro: a scroll cue, then a slow continuous glide through the ceremonies until the guest takes over ---------- */
+  function guide() {
+    const cue = document.createElement('button');
+    cue.type = 'button';
+    cue.className = 'scroll-cue';
+    cue.innerHTML = '<span>Scroll down for the celebrations</span><i aria-hidden="true"></i>';
+    document.body.appendChild(cue);
+    const root = document.documentElement;
+    const USER = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
+    let active = true, gliding = false, raf = 0, timer = 0, y = 0, last = 0, t0 = 0, points = [];
+    const hideCue = () => cue.classList.add('gone');
+    function stop() {
+      active = false;
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+      root.style.scrollBehavior = '';
+      USER.forEach(ev => removeEventListener(ev, onUser, true));
+    }
+    function onUser(e) {
+      if (e.target && e.target.closest && e.target.closest('.scroll-cue')) return;
+      stop();
+    }
+    function step(now) {
+      if (!active) return;
+      const dt = Math.max(0, Math.min(.05, (now - last) / 1000));
+      last = Math.max(last, now);
+      const vh = innerHeight, mid = y + vh / 2;
+      // linger near the middle of each ceremony, move faster in between
+      const d = Math.min(...points.map(p => Math.abs(p - mid)));
+      const k = Math.min(1, d / (vh * .55));
+      const easeIn = Math.max(0, Math.min(1, (now - t0) / 1800));
+      y += vh * (.06 + .24 * k * k) * easeIn * dt;
+      const max = root.scrollHeight - vh;
+      window.scrollTo(0, Math.min(y, max));
+      if (y >= max) return stop();
+      raf = requestAnimationFrame(step);
+    }
+    function begin() {
+      if (!active || gliding) return;
+      gliding = true;
+      hideCue();
+      if (reduce) { document.querySelector('#tilak').scrollIntoView(); return stop(); }
+      points = [...document.querySelectorAll('.chapter:not(.invite) .wrap, footer .wrap')].map(el => { const r = el.getBoundingClientRect(); return r.top + scrollY + r.height / 2; });
+      root.style.scrollBehavior = 'auto';
+      y = scrollY;
+      t0 = last = performance.now();
+      raf = requestAnimationFrame(step);
+    }
+    USER.forEach(ev => addEventListener(ev, onUser, { capture: true, passive: true }));
+    addEventListener('scroll', () => { if (scrollY > 80) hideCue(); }, { passive: true });
+    cue.addEventListener('click', () => { clearTimeout(timer); begin(); });
+    timer = setTimeout(() => { if (scrollY > 40) stop(); else begin(); }, 4500);
+  }
+
+  /* ---------- Each ceremony dissolves upward as it scrolls away ---------- */
+  if (!reduce) {
+    const wraps = [...document.querySelectorAll('.chapter:not(.invite) .wrap')];
+    let queued = false;
+    const dissolve = () => {
+      queued = false;
+      const vh = innerHeight;
+      wraps.forEach(w => {
+        const r = w.closest('.chapter').getBoundingClientRect();
+        const p = Math.max(0, Math.min(1, 1 - r.bottom / (vh * .7)));
+        if (!p && !w.style.opacity) return;
+        w.style.opacity = p ? (1 - p * .75).toFixed(3) : '';
+        w.style.transform = p ? `translateY(${(-p * 50).toFixed(1)}px) scale(${(1 - p * .05).toFixed(3)})` : '';
+      });
+    };
+    addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(dissolve); } }, { passive: true });
+  }
+
   /* ---------- 0. Intro: build the mandala doors and toran, then open them ---------- */
   (function intro() {
     const box = document.getElementById('intro');
@@ -1081,23 +1393,50 @@ footer { position: relative; overflow: hidden; }
     m += ring(8, 'M200 176 Q212 160 200 142 Q188 160 200 176Z', 'style="fill:rgba(217,164,65,.25)"');
     m += ring(16, 'M200 142 Q220 122 200 104 Q180 122 200 142Z', 'style="fill:rgba(22,162,181,.22)"');
     m += ring(16, 'M200 104 Q232 88 200 76 Q168 88 200 104', 'opacity=".7"');
-    m += ring(32, 'M200 76 Q214 54 200 32 Q186 54 200 76Z', 'style="fill:rgba(158,27,31,.55)"');
+    m += ring(32, 'M200 76 Q214 54 200 32 Q186 54 200 76Z', 'style="fill:rgba(194,24,91,.4)"');
     m += ring(64, 'M200 30 Q205 20 200 10 Q195 20 200 30Z', 'opacity=".8"');
     for (let i = 0; i < 48; i++) { const a = i * TAU / 48; m += `<circle cx="${(200 + 179 * Math.cos(a)).toFixed(1)}" cy="${(200 + 179 * Math.sin(a)).toFixed(1)}" r="2.2" fill="${G}"/>`; }
     m += `<circle cx="200" cy="200" r="10" fill="${G}"/>`;
-    box.querySelectorAll('.in-mandala').forEach(svg => { svg.innerHTML = m; });
+    box.querySelector('.in-mandala').innerHTML = m;
 
-    const toran = document.getElementById('in-toran');
+    // peacock feathers unfurl from the centre outwards
+    const nf = innerWidth < 600 ? 19 : 25;
+    document.getElementById('in-fan').innerHTML = Array.from({ length: nf }, (_, i) => {
+      const a = -84 + i * (168 / (nf - 1));
+      return `<svg viewBox="0 0 60 200" style="--a:${a.toFixed(1)}deg;--k:${Math.abs(i - (nf - 1) / 2)}"><use href="#feather"/></svg>`;
+    }).join('');
+
+    const strand = (len, i, extra = '') => {
+      let beads = '';
+      for (let j = 0; j < len; j++) beads += `<div class="in-m${(i + j) % 4 === 0 ? ' p' : (i + j) % 3 === 0 ? ' y' : ''}"></div>`;
+      return `<div class="in-strand" style="--sw:${(2.6 + Math.random() * 1.6).toFixed(2)}s;--sd:-${(Math.random() * 3).toFixed(2)}s;${extra}">${beads}<div class="in-leaf"></div></div>`;
+    };
+    // toran across the top
     const strands = Math.max(9, Math.round(innerWidth / 42));
     let t = '';
     for (let i = 0; i < strands; i++) {
       const edge = Math.abs(i - (strands - 1) / 2) / ((strands - 1) / 2);
-      const len = Math.round(3 + edge * 4 + (i % 2 ? 0 : 1));
-      let beads = '';
-      for (let j = 0; j < len; j++) beads += `<div class="in-m${(i + j) % 3 === 0 ? ' y' : ''}"></div>`;
-      t += `<div class="in-strand" style="--sw:${(2.6 + Math.random() * 1.6).toFixed(2)}s;--sd:-${(Math.random() * 3).toFixed(2)}s">${beads}<div class="in-leaf"></div></div>`;
+      t += strand(Math.round(3 + edge * 4 + (i % 2 ? 0 : 1)), i);
     }
-    toran.innerHTML = t;
+    document.getElementById('in-toran').innerHTML = t + '<svg class="in-bell l" viewBox="-17 0 34 70"><use href="#bellS"/></svg><svg class="in-bell r" viewBox="-17 0 34 70"><use href="#bellS"/></svg>';
+    // long garlands hanging down both sides
+    const per = innerWidth < 600 ? 2 : 4;
+    ['in-gl', 'in-gr'].forEach((id, side) => {
+      document.getElementById(id).innerHTML = Array.from({ length: per }, (_, i) => {
+        const outer = side ? i : per - 1 - i;
+        return strand(Math.round((innerWidth < 600 ? 10 : 16) - outer * 3 + Math.random() * 2), i + side, `--dd:${(1.2 + i * .12).toFixed(2)}s`);
+      }).join('');
+    });
+
+    // names appear one letter at a time in gold foil
+    box.querySelectorAll('.in-names .nm').forEach((nm, k) => {
+      nm.innerHTML = [...nm.textContent].map((ch, i) => `<i style="--i:${i + k * 6}">${ch}</i>`).join('');
+    });
+    document.getElementById('in-sparks').innerHTML = Array.from({ length: innerWidth < 600 ? 26 : 48 }, () =>
+      `<i class="in-spark" style="left:${(Math.random() * 100).toFixed(1)}%;top:${(40 + Math.random() * 60).toFixed(1)}%;--s:${(2 + Math.random() * 3).toFixed(1)}px;--d:${(4 + Math.random() * 5).toFixed(1)}s;--dl:-${(Math.random() * 8).toFixed(1)}s"></i>`).join('');
+    const nl = innerWidth < 600 ? 7 : 12;
+    document.getElementById('in-lanterns').innerHTML = Array.from({ length: nl }, (_, i) =>
+      `<i class="in-lantern" style="--x:${(3 + i * (94 / nl) + Math.random() * 4).toFixed(1)}%;--d:${(8 + Math.random() * 6).toFixed(1)}s;--dl:-${(Math.random() * 10).toFixed(1)}s;--sc:${(.6 + Math.random() * .8).toFixed(2)}"></i>`).join('');
 
     // always start at the top, even on reload or a link with a #section
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -1126,14 +1465,15 @@ footer { position: relative; overflow: hidden; }
       toTop();
       document.body.classList.remove('locked');
       document.body.classList.add('revealed');
+      guide();
       setTimeout(() => box.remove(), 1000);
       setTimeout(() => openTemple(), reduce ? 0 : 300);
     }
     if (reduce) at(2200, () => { petals.remove(); reveal(); });
     else {
-      at(3900, () => box.classList.add('leaving'));
-      at(4300, () => { box.classList.add('open'); burstPetals(); });
-      at(5500, reveal);
+      at(6900, () => box.classList.add('leaving'));
+      at(7300, () => { box.classList.add('open'); burstPetals(); });
+      at(8200, reveal);
     }
     document.getElementById('in-skip').addEventListener('click', () => { petals.remove(); reveal(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') { petals.remove(); reveal(); } });
@@ -1437,6 +1777,137 @@ footer { position: relative; overflow: hidden; }
     }
     g.restore();
   }
+
+  /* ---------- 3D: art tilts with scroll ---------- */
+  if (!reduce) {
+    const tiltEls = [...document.querySelectorAll('.art > *')];
+    let queued = false;
+    const tilt = () => {
+      queued = false;
+      const vh = innerHeight;
+      tiltEls.forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) return;
+        const p = (r.top + r.height / 2 - vh / 2) / vh;
+        el.style.transform = `perspective(1000px) rotateX(${(p * 14).toFixed(2)}deg) rotateY(${(p * -6).toFixed(2)}deg)`;
+      });
+    };
+    addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(tilt); } }, { passive: true });
+    tilt();
+  }
+
+  /* ---------- 3D: floating marigolds, gold dust and halo rings behind the temple (three.js) ---------- */
+  (function hero3d() {
+    const host = document.getElementById('invite');
+    const canvas = document.createElement('canvas');
+    canvas.className = 'three';
+    canvas.setAttribute('aria-hidden', 'true');
+    host.insertBefore(canvas, host.firstChild);
+    const lib = document.createElement('script');
+    lib.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    lib.onload = () => { try { build(window.THREE); } catch (_) { canvas.remove(); } };
+    lib.onerror = () => canvas.remove();
+    document.head.appendChild(lib);
+
+    function build(T) {
+      const renderer = new T.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+      const scene = new T.Scene();
+      const camera = new T.PerspectiveCamera(45, 1, .1, 100);
+      camera.position.set(0, 0, 14);
+      scene.add(new T.AmbientLight(0xffe2b0, .6));
+      const sun = new T.DirectionalLight(0xffffff, .9);
+      sun.position.set(4, 6, 8);
+      scene.add(sun);
+      const lamp = new T.PointLight(0xffb347, 1.1, 30);
+      lamp.position.set(0, 1, 5);
+      scene.add(lamp);
+
+      // a sphere pushed in and out in ridges reads as a ruffled marigold
+      const geo = new T.SphereGeometry(.42, 32, 22);
+      const pos = geo.attributes.position, v = new T.Vector3();
+      for (let i = 0; i < pos.count; i++) {
+        v.fromBufferAttribute(pos, i);
+        const th = Math.atan2(v.z, v.x), ph = Math.acos(Math.max(-1, Math.min(1, v.y / v.length())));
+        v.multiplyScalar(1 + .13 * Math.sin(th * 14) * Math.sin(ph * 9) + .06 * Math.sin(ph * 22));
+        pos.setXYZ(i, v.x, v.y, v.z);
+      }
+      geo.computeVertexNormals();
+      const count = innerWidth < 700 ? 10 : 18;
+      const meshes = [0xD9520A, 0xF5B000].map(c => {
+        const m = new T.InstancedMesh(geo, new T.MeshStandardMaterial({ color: c, roughness: .65, flatShading: true }), count);
+        scene.add(m);
+        return m;
+      });
+      const flowers = [];
+      const sideX = () => (Math.random() < .5 ? -1 : 1) * (4.6 + Math.random() * 6);
+      meshes.forEach(mesh => { for (let i = 0; i < count; i++) flowers.push({ mesh, i, x: sideX(), y: (Math.random() - .5) * 16, z: -6 + Math.random() * 8, s: .7 + Math.random() * .8, vy: .25 + Math.random() * .5, rx: Math.random() * 6, ry: Math.random() * 6, spin: .3 + Math.random() * .9 }); });
+      const dummy = new T.Object3D();
+
+      // gold dust
+      const dustN = innerWidth < 700 ? 220 : 480;
+      const dustPos = new Float32Array(dustN * 3);
+      for (let i = 0; i < dustN; i++) { dustPos[i * 3] = (Math.random() - .5) * 24; dustPos[i * 3 + 1] = (Math.random() - .5) * 18; dustPos[i * 3 + 2] = -8 + Math.random() * 12; }
+      const dustGeo = new T.BufferGeometry();
+      dustGeo.setAttribute('position', new T.BufferAttribute(dustPos, 3));
+      const dust = new T.Points(dustGeo, new T.PointsMaterial({ color: 0xFFE3A3, size: .07, transparent: true, opacity: .85, blending: T.AdditiveBlending, depthWrite: false }));
+      scene.add(dust);
+
+      // three gold halo rings turning on different axes behind the temple
+      const gold = new T.MeshStandardMaterial({ color: 0xD9A441, metalness: .85, roughness: .3, emissive: 0x4a3008, transparent: true, opacity: .75 });
+      const rings = [[3.1, .04], [3.6, .028], [4.1, .045]].map(([r, t], i) => {
+        const ring = new T.Mesh(new T.TorusGeometry(r, t, 12, 160), gold);
+        ring.position.set(0, .8, -3);
+        ring.rotation.set(i * .6, i * .9, 0);
+        scene.add(ring);
+        return ring;
+      });
+
+      let w = 0, h = 0;
+      function resize() {
+        w = canvas.clientWidth; h = canvas.clientHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / Math.max(1, h);
+        camera.updateProjectionMatrix();
+      }
+      resize();
+      addEventListener('resize', resize);
+
+      let px = 0, py = 0, cx = 0, cy = 0;
+      host.addEventListener('pointermove', e => { px = e.clientX / innerWidth * 2 - 1; py = e.clientY / innerHeight * 2 - 1; });
+
+      let last = performance.now(), raf = 0, on = true;
+      function frame(now) {
+        const dt = Math.min(.05, (now - last) / 1000); last = now;
+        flowers.forEach(f => {
+          f.y -= f.vy * dt; f.rx += f.spin * dt; f.ry += f.spin * .7 * dt;
+          if (f.y < -9) { f.y = 9; f.x = sideX(); }
+          dummy.position.set(f.x + Math.sin(now / 1600 + f.ry) * .4, f.y, f.z);
+          dummy.rotation.set(f.rx, f.ry, 0);
+          dummy.scale.setScalar(f.s);
+          dummy.updateMatrix();
+          f.mesh.setMatrixAt(f.i, dummy.matrix);
+        });
+        meshes.forEach(m => { m.instanceMatrix.needsUpdate = true; });
+        dust.rotation.y += dt * .03;
+        rings.forEach((r, i) => { r.rotation.x += dt * (.12 + i * .05); r.rotation.y += dt * (.08 + i * .04) * (i % 2 ? -1 : 1); });
+        const scrolled = Math.min(1, scrollY / Math.max(1, h));
+        cx += (px * 1.4 - cx) * .05; cy += (-py * .9 - cy) * .05;
+        camera.position.set(cx, cy, 14 - scrolled * 4);
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
+        raf = on && !reduce ? requestAnimationFrame(frame) : 0;
+      }
+      if (reduce) frame(last);
+      else {
+        raf = requestAnimationFrame(frame);
+        if (hasIO) new IntersectionObserver(([e]) => {
+          on = e.isIntersecting;
+          if (on && !raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+        }).observe(host);
+      }
+    }
+  })();
 
   /* ---------- Interactions: progress garland, tap effects, tilt, lanterns ---------- */
   const prog = document.createElement('div');
