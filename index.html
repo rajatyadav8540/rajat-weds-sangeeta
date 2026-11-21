@@ -95,11 +95,6 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-eve
 @keyframes inRot { to { rotate: 360deg; } }
 #intro.leaving .in-mw { transform: scale(1.7); opacity: 0; }
 
-#intro .in-fan { position: absolute; left: 50%; bottom: 7vh; width: 0; height: 0; z-index: 1; --L: min(66vh, 94vw, 620px); animation: inFanSway 4s 3s ease-in-out infinite alternate; transition: transform 1.2s cubic-bezier(.6, 0, .3, 1), opacity .9s; }
-@keyframes inFanSway { from { rotate: -1.5deg; } to { rotate: 1.5deg; } }
-#intro .in-fan svg { position: absolute; left: calc(var(--L) * -.15); bottom: 0; width: calc(var(--L) * .3); height: var(--L); transform-origin: 50% 100%; transform: rotate(0deg) scale(.2); opacity: 0; animation: inFeather 1.5s cubic-bezier(.2, .9, .25, 1.1) both; animation-delay: calc(1.2s + var(--k) * .06s); }
-@keyframes inFeather { to { transform: rotate(var(--a)) scale(1); opacity: 1; } }
-#intro.leaving .in-fan { transform: scale(1.45); opacity: 0; }
 
 #intro .in-lantern { position: absolute; bottom: -40px; left: var(--x); z-index: 1; width: 14px; height: 20px; border-radius: 45% 45% 35% 35%; background: radial-gradient(circle at 50% 60%, #FFF1B8, #FF9A3C 60%, #C2410C); box-shadow: 0 0 18px 6px rgba(255, 170, 60, .45); opacity: 0; animation: inLantern var(--d) linear var(--dl) infinite; }
 @keyframes inLantern { 0% { transform: translate(0, 0) scale(var(--sc)); opacity: 0; } 10% { opacity: .95; } 50% { transform: translate(20px, -55vh) scale(var(--sc)); } 90% { opacity: .7; } 100% { transform: translate(-12px, -112vh) scale(calc(var(--sc) * .6)); opacity: 0; } }
@@ -354,10 +349,6 @@ body.revealed .invite .wrap { transform: none; }
 .vows li.on { background: rgba(255, 179, 71, .18); color: #FFF4E6; transform: translateX(6px); }
 .vows li.done { color: #FFE9D6; }
 .vidaai-note { margin-top: 18px; max-width: 46ch; font-family: var(--f-display); font-size: 1.1rem; color: var(--gold-soft); }
-.feather-corner { position: absolute; z-index: 1; width: 90px; height: 300px; pointer-events: none; transform-origin: 50% 100%; animation: fsway 4s ease-in-out infinite alternate; opacity: .9; }
-.feather-corner.l { left: -10px; bottom: -40px; rotate: 28deg; }
-.feather-corner.r { right: -10px; bottom: -40px; rotate: -28deg; animation-delay: -2s; }
-@keyframes fsway { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
 
 /* ---------- 6. Venues ---------- */
 .final {
@@ -526,29 +517,46 @@ footer .wrap { perspective: 700px; }
   radial-gradient(circle at 50% 0, transparent 13px, rgba(11, 79, 92, .07) 14px, transparent 15.5px) 0 0 / 30px 18px,
   var(--ivory); }
 
-/* ---------- Namaste: folded hands to welcome and to invite ---------- */
+/* ---------- Namaste: a welcoming figure raises her hands, folds them and bows ---------- */
 .namaste { display: block; overflow: visible; }
-.namaste .nl, .namaste .nr { transform-box: view-box; }
-.namaste .nl { transform-origin: 80px 225px; }
-.namaste .nr { transform-origin: 120px 225px; }
-@keyframes nlIn { from { transform: rotate(-34deg) translateX(-12px); opacity: 0; } 25% { opacity: 1; } to { transform: none; opacity: 1; } }
-@keyframes nrIn { from { transform: rotate(34deg) translateX(12px); opacity: 0; } 25% { opacity: 1; } to { transform: none; opacity: 1; } }
+.namaste .arm, .namaste .fig, .namaste .head { transform-box: view-box; }
+.namaste .arm.l { transform-origin: 72px 318px; }
+.namaste .arm.r { transform-origin: 228px 318px; }
+.namaste .fig { transform-origin: 150px 360px; }
+.namaste .head { transform-origin: 150px 172px; }
+@keyframes armL { from { transform: rotate(58deg); } to { transform: none; } }
+@keyframes armR { from { transform: rotate(-58deg); } to { transform: none; } }
+@keyframes figBow { 0%, 100% { transform: none; } 45% { transform: translateY(4px); } }
+@keyframes headBow { 0%, 100% { transform: none; } 45% { transform: translateY(6px) scale(.98); } }
 .namaste .nglow { transform-box: fill-box; transform-origin: center; animation: nGlow 2.4s ease-in-out infinite alternate; }
 @keyframes nGlow { from { opacity: .45; transform: scale(.9); } to { opacity: .9; transform: scale(1.05); } }
 .namaste .nstar { transform-box: fill-box; transform-origin: center; animation: nStar 1.8s ease-in-out infinite alternate; }
 @keyframes nStar { from { opacity: .2; transform: scale(.5); } to { opacity: 1; transform: scale(1); } }
 #intro .in-names .wd { display: block; font: 400 .42em/1.3 var(--f-script); color: var(--gold-soft); opacity: 0; animation: inRise .9s 3.2s ease-out both; }
-#intro .in-namaste { width: min(100px, 24vw); height: auto; margin: .5em auto .1em; }
-#intro .in-namaste .nl { animation: nlIn 1.3s 3.6s cubic-bezier(.3, .9, .3, 1.1) both; }
-#intro .in-namaste .nr { animation: nrIn 1.3s 3.6s cubic-bezier(.3, .9, .3, 1.1) both; }
-#intro .in-namaste .nglow, #intro .in-namaste .nstar { opacity: 0; animation-delay: 4.6s; animation-fill-mode: none; }
-#intro .in-welcome { font: 400 clamp(1.05rem, 3.2vmin, 1.35rem)/1.35 var(--f-deva); color: var(--gold-soft); margin-top: .2em; opacity: 0; animation: inRise .9s 4.6s ease-out both; }
+#intro .in-namaste { width: min(140px, 34vw); height: auto; margin: .4em auto 0; }
+#intro .in-namaste .fig { opacity: 0; animation: inRise .8s 3.3s ease-out both, figBow 1.4s 5.3s ease-in-out; }
+#intro .in-namaste .arm.l { animation: armL 1.6s 3.6s cubic-bezier(.45, .05, .25, 1) both; }
+#intro .in-namaste .arm.r { animation: armR 1.6s 3.6s cubic-bezier(.45, .05, .25, 1) both; }
+#intro .in-namaste .head { animation: headBow 1.4s 5.3s ease-in-out; }
+#intro .in-namaste .nglow, #intro .in-namaste .nstar { opacity: 0; animation-delay: 4.9s; animation-fill-mode: none; }
+#intro .in-welcome { font: 400 clamp(1.05rem, 3.2vmin, 1.35rem)/1.35 var(--f-deva); color: var(--gold-soft); margin-top: .2em; opacity: 0; animation: inRise .9s 4.9s ease-out both; }
 #intro .in-welcome span { display: block; font: italic 400 .78em/1.4 var(--f-body); color: #F1D9C6; }
-.foot-namaste { width: 116px; margin-bottom: 4px; }
-.armed .foot-namaste .nl, .armed .foot-namaste .nr, .armed .foot-namaste .nglow { opacity: 0; }
-.play .foot-namaste .nl { opacity: 1; animation: nlIn 1.4s .3s cubic-bezier(.3, .9, .3, 1.1) both; }
-.play .foot-namaste .nr { opacity: 1; animation: nrIn 1.4s .3s cubic-bezier(.3, .9, .3, 1.1) both; }
-.play .foot-namaste .nglow { opacity: 1; animation-delay: 1.4s; animation-fill-mode: backwards; }
+.foot-namaste { width: 170px; margin-bottom: 4px; }
+.namaste-photo { position: relative; display: block; }
+.namaste-photo img { position: relative; display: block; width: 100%; height: auto; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, .35)); -webkit-mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, #000 72%, transparent 100%); mask-image: radial-gradient(ellipse 55% 55% at 50% 48%, #000 72%, transparent 100%); }
+.namaste-photo .nglow { position: absolute; inset: -12%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 214, 130, .55), rgba(255, 180, 80, 0)); animation: nGlow 2.4s ease-in-out infinite alternate; }
+@keyframes photoBow { 0%, 100% { transform: none; } 45% { transform: translateY(5px) scale(.98); } }
+#intro .namaste-photo img { opacity: 0; animation: inRise 1s 3.4s ease-out both, photoBow 1.4s 5.2s ease-in-out; }
+.armed .namaste-photo img { opacity: 0; }
+.play .namaste-photo img { opacity: 1; animation: rise 1s .3s cubic-bezier(.2, .8, .2, 1) both, photoBow 1.4s 1.8s ease-in-out; }
+.armed .foot-namaste .arm.l { transform: rotate(58deg); }
+.armed .foot-namaste .arm.r { transform: rotate(-58deg); }
+.armed .foot-namaste .nglow { opacity: 0; }
+.play .foot-namaste .arm.l { animation: armL 1.7s .4s cubic-bezier(.45, .05, .25, 1) both; }
+.play .foot-namaste .arm.r { animation: armR 1.7s .4s cubic-bezier(.45, .05, .25, 1) both; }
+.play .foot-namaste .fig { animation: figBow 1.4s 2.2s ease-in-out; }
+.play .foot-namaste .head { animation: headBow 1.4s 2.2s ease-in-out; }
+.play .foot-namaste .nglow { opacity: 1; animation-delay: 2s; animation-fill-mode: backwards; }
 .union-cap span { display: block; }
 .union-cap span[lang] { font-family: var(--f-deva); font-size: 1.25rem; }
 .union-cap { font-family: var(--f-display); font-size: 1.05rem; text-align: center; color: var(--gold-soft); letter-spacing: .04em; margin-bottom: 8px; }
@@ -560,7 +568,6 @@ footer .wrap { perspective: 700px; }
   .haldi .art { order: 0; }
   .venues { grid-template-columns: 1fr; }
   .dots { display: none; }
-  .feather-corner { width: 60px; height: 200px; }
 }
 @media (max-width: 600px) {
   .countdown div { min-width: 64px; }
@@ -573,9 +580,8 @@ footer .wrap { perspective: 700px; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   #intro::before { display: none; }
   #intro .in-diya, #intro .in-shubh, #intro .in-when, #intro .in-sound, #intro .in-ganesh, #intro .in-orn, #intro .in-medal, #intro .in-names .nm { opacity: 1; }
-  #intro .in-names .wd, #intro .in-welcome, #intro .in-namaste .nglow, #intro .in-namaste .nstar { opacity: 1; }
+  #intro .in-names .wd, #intro .in-welcome, #intro .in-namaste .nglow, #intro .in-namaste .nstar, #intro .in-namaste .fig, #intro .namaste-photo img { opacity: 1; }
   #intro .in-mandala { opacity: .5; }
-  #intro .in-fan svg { opacity: 1; transform: rotate(var(--a)); }
   #in-toran, #intro .in-garland .in-strand { transform: none; translate: 0 0; }
   .invite .wrap { transform: none; }
 }
@@ -588,7 +594,6 @@ footer .wrap { perspective: 700px; }
   <div class="in-sky" aria-hidden="true"></div>
   <div class="in-mw" aria-hidden="true"><svg class="in-mandala" viewBox="0 0 400 400"></svg></div>
   <div id="in-lanterns" aria-hidden="true"></div>
-  <div class="in-fan" id="in-fan" aria-hidden="true"></div>
   <div id="in-sparks" aria-hidden="true"></div>
   <div class="in-garland l" id="in-gl" aria-hidden="true"></div>
   <div class="in-garland r" id="in-gr" aria-hidden="true"></div>
@@ -609,7 +614,6 @@ footer .wrap { perspective: 700px; }
     <span class="hands-slot" data-cls="in-namaste"></span>
     <p class="in-welcome" lang="hi">आपका हार्दिक स्वागत है<span lang="en">You are warmly welcomed</span></p>
     <p class="in-when">8 – 12 December 2026 · Etawah</p>
-    <p class="in-sound">Tap anywhere to start the music</p>
   </div>
   <div class="in-flash" aria-hidden="true"></div>
   <button id="in-skip" type="button">Skip intro</button>
@@ -822,7 +826,6 @@ footer .wrap { perspective: 700px; }
           <li><svg aria-hidden="true"><use href="#cal"/></svg>Tuesday, 8 December</li>
           <li><svg aria-hidden="true"><use href="#pin"/></svg>Vill. Bhadeiyi, Post Kumhawar, Etawah</li>
         </ul>
-        <p class="tap-hint"><i></i>Tap the thali for aarti, or anywhere to shower akshat</p>
       </div>
       <div class="art">
         <svg class="thali-art" viewBox="0 0 440 440" aria-hidden="true">
@@ -896,7 +899,6 @@ footer .wrap { perspective: 700px; }
           <li><svg aria-hidden="true"><use href="#cal"/></svg>Wednesday, 9 December</li>
           <li><svg aria-hidden="true"><use href="#pin"/></svg>Vill. Bhadeiyi, Post Kumhawar, Etawah</li>
         </ul>
-        <p class="tap-hint"><i></i>Tap anywhere to splash haldi</p>
       </div>
     </div>
   </section>
@@ -917,7 +919,6 @@ footer .wrap { perspective: 700px; }
         <li><svg aria-hidden="true"><use href="#cal"/></svg>Friday, 11 December</li>
         <li><svg aria-hidden="true"><use href="#pin"/></svg>Balaji Resort, Bharthan, Etawah</li>
       </ul>
-      <p class="tap-hint"><i></i>Tap the sky for fireworks</p>
     </div>
     <div class="scene" aria-hidden="true">
       <svg class="sky-line far" id="sky-far" viewBox="0 0 2400 300" preserveAspectRatio="none"></svg>
@@ -929,7 +930,6 @@ footer .wrap { perspective: 700px; }
 
   <!-- 5. Phere & Vidaai -->
   <section class="chapter banded pheras" id="pheras" aria-labelledby="pheras-t">
-    <svg class="feather-corner l" viewBox="0 0 60 200" aria-hidden="true"><use href="#feather"/></svg>
     <div class="diya-row" id="diya-row" aria-hidden="true"></div>
     <div class="wrap two">
       <div class="art">
@@ -958,7 +958,6 @@ footer .wrap { perspective: 700px; }
           <li><svg aria-hidden="true"><use href="#cal"/></svg>Saturday, 12 December</li>
           <li><svg aria-hidden="true"><use href="#pin"/></svg>Balaji Resort, Bharthan, Etawah</li>
         </ul>
-        <p class="tap-hint"><i></i>Tap the fire to make it blaze</p>
       </div>
     </div>
   </section>
@@ -981,7 +980,7 @@ footer .wrap { perspective: 700px; }
             <h3>Family home</h3>
             <p class="addr">Vill. Bhadeiyi, Post Kumhawar, Etawah</p>
             <div class="evs"><span>Tue 8 Dec · Tilak</span><span>Wed 9 Dec · Haldi</span></div>
-            <a class="btn soft" href="https://www.google.com/maps/search/?api=1&amp;query=Bhadeiyi+Kumhawar+Etawah" target="_blank" rel="noopener">Open in Google Maps ↗</a>
+            <a class="btn soft" href="https://maps.app.goo.gl/G2DKAvg3izvu72Pd7" target="_blank" rel="noopener">Open in Google Maps ↗</a>
           </article>
           <article class="venue">
             <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 56 V28 Q10 14 32 10 Q54 14 54 28 V56Z" fill="#E6F2EF" stroke="#0B4F5C" stroke-width="2.5"/><path d="M24 56 V38 Q32 28 40 38 V56" fill="#D9A441"/><circle cx="32" cy="7" r="3" fill="#C2185B"/></svg>
@@ -1024,27 +1023,83 @@ footer .wrap { perspective: 700px; }
   }
   const svgHTML = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
 
-  /* ---------- Namaste: two palms folded together, drawn as one hand and its mirror ---------- */
+  /* ---------- Namaste: two palms folded together, drawn as one shaded hand and its mirror ---------- */
   function namasteSVG(cls) {
-    const skin = '#D9A07A', meh = '#8A3A12';
-    const bangles = Array.from({ length: 4 }, (_, i) => `<rect x="70" y="${199 + i * 5}" width="31" height="4" rx="2" fill="${i % 2 ? '#FFF3E0' : '#C8102E'}"/>`).join('');
-    const hand = `
-      <path d="M76,224 L74,196 C66,168 64,146 68,128 C72,108 80,90 84,70 L90,36 C92,26 98,26 100,38 L100,224 Z" fill="${skin}"/>
-      <path d="M92,60 C95,62 98,62 100,61 M88,82 C93,84 97,84 100,83 M84,104 C90,106 96,106 100,105" stroke="rgba(110,50,20,.35)" stroke-width="1.4" fill="none"/>
-      <path d="M100,122 C90,120 84,130 86,144 L95,164 L100,164 Z" fill="#C98E68"/>
-      <g fill="${meh}"><circle cx="82" cy="148" r="2"/><circle cx="79" cy="160" r="1.6"/><circle cx="82" cy="172" r="2"/></g>
-      <path d="M78,186 Q86,180 94,186" stroke="${meh}" stroke-width="1.4" fill="none"/>
-      <rect x="70" y="194" width="31" height="3.5" rx="1.5" fill="#D9A441"/>${bangles}
-      <path d="M64,218 L100,218 L100,252 L56,252 Z" fill="#8E0D24"/><path d="M64,218 H100" stroke="#D9A441" stroke-width="3"/>`;
+    const id = cls.replace(/\W/g, '');
+    const meh = '#8E3A14', edge = 'rgba(110,50,25,.38)';
+    const sk = `url(#sk-${id})`, gd = `url(#gd-${id})`;
+    // back to front: pinky, ring, middle, index; then the palm base, the thumb in front, bangles and sleeve
+    const half = `
+      <path d="M70,178 C67,152 71,120 77,98 C79,90 86,90 87,98 C88,122 89,152 91,178 Z" fill="${sk}" stroke="${edge}" stroke-width=".8"/>
+      <path d="M76,172 C75,142 79,98 84,70 C86,61 94,61 95,70 C96,98 97,142 98,172 Z" fill="${sk}" stroke="${edge}" stroke-width=".8"/>
+      <path d="M81,168 C81,132 86,84 90,48 C91,39 99,39 100,48 L100,168 Z" fill="${sk}" stroke="${edge}" stroke-width=".8"/>
+      <path d="M88,172 C88,142 92,98 95,66 C96,58 100,58 100,64 L100,172 Z" fill="${sk}" stroke="${edge}" stroke-width=".8"/>
+      <g fill="${meh}" opacity=".85"><ellipse cx="82" cy="96" rx="3.2" ry="4.4"/><ellipse cx="89.5" cy="68" rx="3.4" ry="4.6"/><ellipse cx="95.5" cy="47" rx="3.4" ry="4.8"/><ellipse cx="98" cy="63" rx="2" ry="3.6"/></g>
+      <path d="M78,126 q4,2 8,0 M78,146 q4,2 8,0 M85,108 q4,2 8,0 M85,132 q4,2 8,0 M90,96 q4,2 8,0 M92,122 q3,2 7,0" stroke="${edge}" stroke-width="1" fill="none"/>
+      <path d="M64,232 C62,206 64,186 70,170 C80,164 92,162 100,162 L100,232 Z" fill="${sk}"/>
+      <g stroke="${meh}" stroke-width="1.1" fill="none" opacity=".85"><path d="M73,196 q9,-8 18,0"/><circle cx="82" cy="205" r="3"/></g>
+      <g fill="${meh}" opacity=".85"><circle cx="75" cy="186" r="1.3"/><circle cx="81" cy="182" r="1.3"/><circle cx="87" cy="186" r="1.3"/></g>
+      <path d="M100,118 C91,119 85,132 85,149 C85,166 91,180 100,184 Z" fill="url(#th-${id})" stroke="${edge}" stroke-width=".8"/>
+      <path d="M98.6,122 C95,122 93,125.5 93,129.5 C95,131 97.2,131 98.6,130.6 Z" fill="#F4CDB2" stroke="${edge}" stroke-width=".6"/>
+      <rect x="61" y="210" width="40" height="5" rx="2.5" fill="${gd}"/>
+      <rect x="61" y="215" width="40" height="4" rx="2" fill="#B3122E"/>
+      <rect x="61" y="219" width="40" height="3.5" rx="1.75" fill="#FFF3E0"/>
+      <rect x="61" y="222.5" width="40" height="4" rx="2" fill="#B3122E"/>
+      <rect x="61" y="226.5" width="40" height="5" rx="2.5" fill="${gd}"/>
+      <path d="M57,231 L101,231 L101,264 L49,264 Z" fill="#7E0B22"/>
+      <rect x="55" y="230" width="46" height="6" fill="${gd}"/>
+      <g fill="#FFE3A3">${[62, 70, 78, 86, 94].map(x => `<circle cx="${x}" cy="242" r="1.4"/>`).join('')}</g>`;
     const star = (x, y, r, d) => `<path class="nstar" style="animation-delay:${d}s" d="M${x},${y - r} Q${x},${y} ${x + r},${y} Q${x},${y} ${x},${y + r} Q${x},${y} ${x - r},${y} Q${x},${y} ${x},${y - r}Z" fill="#FFE3A3"/>`;
-    return `<svg class="namaste ${cls}" viewBox="0 0 200 252" aria-hidden="true">
-      <circle class="nglow" cx="100" cy="110" r="74" fill="url(#glow)"/>
-      <g class="nl">${hand}</g>
-      <g class="nr"><g transform="translate(200 0) scale(-1 1)">${hand}</g></g>
-      ${star(46, 52, 7, 0)}${star(158, 40, 6, .6)}${star(168, 104, 5, 1.1)}${star(34, 112, 5, .3)}
+    const face = '#DDA27A', hair = '#1E120C', sleeve = '#7E0B22';
+    // one forearm with the hand; the right side is the same drawing mirrored
+    const arm = `<path d="M72,318 L136,318" stroke="${sleeve}" stroke-width="26" stroke-linecap="round"/><g transform="translate(88 159) scale(.62)">${half}</g>`;
+    const jhumka = x => `<g fill="#E2B04A"><path d="M${x - 5},128 Q${x},119 ${x + 5},128 Z"/><circle cx="${x - 3}" cy="131" r="1.4"/><circle cx="${x}" cy="132" r="1.4"/><circle cx="${x + 3}" cy="131" r="1.4"/></g>`;
+    return `<svg class="namaste ${cls}" viewBox="0 0 300 360" aria-hidden="true">
+      <defs>
+        <linearGradient id="sk-${id}" gradientUnits="userSpaceOnUse" x1="58" y1="0" x2="100" y2="0"><stop offset="0" stop-color="#B5764F"/><stop offset=".55" stop-color="#D99A70"/><stop offset="1" stop-color="#EDBB95"/></linearGradient>
+        <linearGradient id="th-${id}" gradientUnits="userSpaceOnUse" x1="84" y1="0" x2="100" y2="0"><stop offset="0" stop-color="#D2915F"/><stop offset="1" stop-color="#F2C6A2"/></linearGradient>
+        <linearGradient id="gd-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFEDB5"/><stop offset=".5" stop-color="#E2B04A"/><stop offset="1" stop-color="#A8741C"/></linearGradient>
+      </defs>
+      <circle class="nglow" cx="150" cy="190" r="130" fill="url(#glow)"/>
+      <g class="fig">
+        <path d="M116,104 C106,128 108,156 118,176 L134,168 C126,148 124,126 126,106Z M184,104 C194,128 192,156 182,176 L166,168 C174,148 176,126 174,106Z" fill="${hair}"/>
+        <rect x="137" y="138" width="26" height="44" rx="10" fill="${face}"/>
+        <path d="M150,170 C118,170 92,182 80,200 C68,218 64,252 62,360 L238,360 C236,252 232,218 220,200 C208,182 182,170 150,170Z" fill="#8E0D24"/>
+        <path d="M176,178 C204,184 226,204 232,240 L240,360 L178,360 C190,300 196,236 170,186Z" fill="#D81B60"/>
+        <path d="M170,186 C196,236 190,300 178,360" stroke="#E2B04A" stroke-width="5" fill="none"/>
+        <path d="M130,176 Q150,204 170,176" fill="none" stroke="#E2B04A" stroke-width="3"/>
+        <circle cx="150" cy="199" r="5" fill="#E2B04A"/><circle cx="150" cy="199" r="2.4" fill="#C8102E"/>
+        <path d="M90,214 Q66,262 72,318 M210,214 Q234,262 228,318" stroke="${sleeve}" stroke-width="28" stroke-linecap="round" fill="none"/>
+        <g class="head">
+          <ellipse cx="150" cy="112" rx="33" ry="40" fill="${face}"/>
+          <path d="M117,108 C114,72 134,62 150,62 C166,62 186,72 183,108 C180,92 168,80 150,80 C132,80 120,92 117,108Z" fill="${hair}"/>
+          <path d="M150,63 V80" stroke="#C8102E" stroke-width="2.4"/>
+          <path d="M150,66 V84" stroke="#E2B04A" stroke-width="1"/><circle cx="150" cy="86" r="3" fill="#E2B04A"/>
+          <circle cx="150" cy="99" r="2.6" fill="#C8102E"/>
+          <path d="M131,104 q7,-4 13,0 M156,104 q7,-4 13,0" stroke="#3A2116" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path d="M132,114 q6,4 12,0 M156,114 q6,4 12,0" stroke="#3A2116" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <circle cx="131" cy="125" r="5.5" fill="rgba(232,100,100,.2)"/><circle cx="169" cy="125" r="5.5" fill="rgba(232,100,100,.2)"/>
+          <path d="M150,116 q-3,9 1,12" stroke="rgba(110,50,25,.5)" stroke-width="1.3" fill="none"/>
+          <circle cx="155" cy="125" r="1.3" fill="#E2B04A"/>
+          <path d="M142,135 q8,6 16,0" stroke="#A3243A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          ${jhumka(116)}${jhumka(184)}
+        </g>
+        <g class="arm l">${arm}</g>
+        <g class="arm r"><g transform="translate(300 0) scale(-1 1)">${arm}</g></g>
+      </g>
+      ${star(52, 120, 7, 0)}${star(250, 96, 6, .6)}${star(262, 190, 5, 1.1)}${star(38, 210, 5, .3)}
     </svg>`;
   }
   document.querySelectorAll('.hands-slot').forEach(el => { el.outerHTML = namasteSVG(el.dataset.cls); });
+  // if a real photo named namaste.png sits next to this page, use it instead of the drawn figure
+  (function namastePhoto() {
+    const probe = new Image();
+    probe.onload = () => document.querySelectorAll('svg.namaste').forEach(svg => {
+      const cls = [...svg.classList].find(c => c !== 'namaste');
+      svg.outerHTML = `<div class="namaste-photo ${cls}" aria-hidden="true"><i class="nglow"></i><img src="namaste.png" alt=""></div>`;
+    });
+    probe.src = 'namaste.png';
+  })();
 
   /* ---------- Countdown to the baaraat (IST) ---------- */
   const target = new Date('2026-12-11T00:00:00+05:30').getTime();
@@ -1398,13 +1453,6 @@ footer .wrap { perspective: 700px; }
     for (let i = 0; i < 48; i++) { const a = i * TAU / 48; m += `<circle cx="${(200 + 179 * Math.cos(a)).toFixed(1)}" cy="${(200 + 179 * Math.sin(a)).toFixed(1)}" r="2.2" fill="${G}"/>`; }
     m += `<circle cx="200" cy="200" r="10" fill="${G}"/>`;
     box.querySelector('.in-mandala').innerHTML = m;
-
-    // peacock feathers unfurl from the centre outwards
-    const nf = innerWidth < 600 ? 19 : 25;
-    document.getElementById('in-fan').innerHTML = Array.from({ length: nf }, (_, i) => {
-      const a = -84 + i * (168 / (nf - 1));
-      return `<svg viewBox="0 0 60 200" style="--a:${a.toFixed(1)}deg;--k:${Math.abs(i - (nf - 1) / 2)}"><use href="#feather"/></svg>`;
-    }).join('');
 
     const strand = (len, i, extra = '') => {
       let beads = '';
